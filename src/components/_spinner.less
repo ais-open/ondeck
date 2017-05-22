@@ -1,0 +1,22 @@
+@keyframes spin {
+    to {
+        transform: rotate(1440deg);
+    }
+}
+
+.spinner {
+    animation: spin 2s infinite cubic-bezier(0.6, 0.2, 0.4, 0.8);
+}
+
+.spinner__button {
+    fill: @clr-dark;
+    height: 16px;
+    width: 16px;
+}
+
+.spinner__component {
+    fill: @clr-gray-light;
+    height: 32px;
+    margin: 2.0em;
+    width: 32px;
+}
