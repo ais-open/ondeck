@@ -30,6 +30,41 @@ class SettingsForm extends React.Component {
                         label="Data URL"
                         onChange={this.handleChange}
                         />
+
+                    <AisTextInput name="baseTiles"
+                        label="Base Tiles"
+                        onChange={this.handleChange}
+                        />
+
+                    <AisTextInput name="geoColor"
+                        label="Data Color [R, G, B]"
+                        onChange={this.handleChange}
+                        />
+
+                    <AisTextInput name="pointRadius"
+                        label="Point Radius"
+                        onChange={this.handleChange}
+                        />
+
+                    <AisTextInput name="lineWidth"
+                        label="Line Width"
+                        onChange={this.handleChange}
+                        />
+
+                    <AisTextInput name="opacity"
+                        label="Opacity (0 - 1)"
+                        onChange={this.handleChange}
+                        />
+
+                    <AisTextInput name="bearing"
+                        label="Bearing (left/right)"
+                        onChange={this.handleChange}
+                        />
+
+                    <AisTextInput name="pitch"
+                        label="Pitch (up/down)"
+                        onChange={this.handleChange}
+                        />
                 </form>
                 <button onClick={this.closeModal}>Save</button>
             </div>
