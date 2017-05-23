@@ -4,6 +4,7 @@ import { Shortcuts, ShortcutManager } from 'react-shortcuts';
 import ReactModal from 'react-modal';
 
 import MapComponent from '../components/map';
+import SettingsForm from '../components/settings';
 import Keymap from './HomePageKeymap';
 
 
@@ -13,7 +14,7 @@ class HomePage extends React.Component {
         super(props);
 
         this.state = {
-            isModalOpen: false
+            isModalOpen: true
         };
 
         this.shortcutManager = new ShortcutManager(Keymap);
@@ -51,10 +52,13 @@ class HomePage extends React.Component {
                     style={{
                         overlay: {
                             backgroundColor: 'rgba(0, 0, 0, 0.75)'
+                        },
+                        content: {
+                            backgroundColor: '#eee'
                         }
                     }}
                     contentLabel="On Deck Settings">
-                    <button onClick={this.setModalState}>Close</button>
+                    <SettingsForm onClose={this.setModalState} />
                 </ReactModal>
             </Shortcuts>
         );
