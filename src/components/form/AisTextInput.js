@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-const AisTextInput = ({name, label, showLabel, error, onChange, value}) => {
+const AisTextInput = ({name, label, error, onChange, value}) => {
 
     return (
         <div className="AisTextInput">
