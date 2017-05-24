@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Shortcuts, ShortcutManager } from 'react-shortcuts';
 import ReactModal from 'react-modal';
 
+import ConfigurationManager from '../config';
 import MapComponent from '../components/map';
 import SettingsForm from '../components/settings';
 import Keymap from './HomePageKeymap';
@@ -13,11 +14,14 @@ class HomePage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            isModalOpen: true
-        };
-
+        this.configurationManager = new ConfigurationManager();
         this.shortcutManager = new ShortcutManager(Keymap);
+
+        const config = this.configurationManager.getConfig();
+        this.state = {
+            isModalOpen: true,
+            configuration: config
+        };
 
         this.setModalState = this.setModalState.bind(this);
     }
@@ -45,6 +49,8 @@ class HomePage extends React.Component {
     }
 
     render() {
+        let config = this.configurationManager.getConfig();
+
         return (
             <Shortcuts name='SETTINGS' handler={this.setModalState}>
                 <MapComponent />
