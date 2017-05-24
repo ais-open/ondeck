@@ -31,11 +31,6 @@ class SettingsForm extends React.Component {
                         onChange={this.handleChange}
                         />
 
-                    <AisTextInput name="baseTiles"
-                        label="Base Tiles"
-                        onChange={this.handleChange}
-                        />
-
                     <AisTextInput name="geoColor"
                         label="Data Color [R, G, B]"
                         onChange={this.handleChange}
