@@ -17,3 +17,14 @@ ul {
 li {
     margin: 0.5em 0;
 }
+
+a {
+    cursor: pointer;
+    color: @clr-highlight-alt;
+    text-decoration: none;
+
+    &:hover {
+        color: lighten(@clr-highlight-alt, 5%);
+        text-decoration: underline;
+    }
+}

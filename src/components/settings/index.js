@@ -65,8 +65,13 @@ class SettingsForm extends React.Component {
                         label="Pitch (up/down)"
                         onChange={this.handleChange}
                         />
+
+                    <div className="SettingsForm__actions">
+                        <a onClick={this.closeModal}>Cancel</a>
+                        <button onClick={this.closeModal}>Save</button>
+                    </div>
                 </form>
-                <button onClick={this.closeModal}>Save</button>
+
             </div>
         );
     }
