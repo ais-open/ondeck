@@ -17,6 +17,7 @@ class SettingsForm extends React.Component {
         this.closeModal = this.closeModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.save = this.save.bind(this);
+        this.reset = this.reset.bind(this);
     }
 
     closeModal() {
@@ -47,6 +48,11 @@ class SettingsForm extends React.Component {
     save(evt) {
         evt.preventDefault();
         this.props.onSave(this.state.current);
+        this.closeModal();
+    }
+
+    reset() {
+        this.props.onReset();
         this.closeModal();
     }
 
@@ -107,6 +113,7 @@ class SettingsForm extends React.Component {
 
                     <div className="SettingsForm__actions">
                         <a onClick={this.closeModal}>Cancel</a>
+                        <a onClick={this.reset}>Reset</a>
                         <button onClick={this.save}>Save</button>
                     </div>
                 </form>
@@ -119,6 +126,7 @@ class SettingsForm extends React.Component {
 SettingsForm.propTypes = {
     config: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
+    onReset: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired
 };
 

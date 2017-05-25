@@ -25,6 +25,7 @@ class HomePage extends React.Component {
 
         this.setModalState = this.setModalState.bind(this);
         this.updateConfiguration = this.updateConfiguration.bind(this);
+        this.resetConfiguration = this.resetConfiguration.bind(this);
     }
 
     getChildContext() {
@@ -50,6 +51,10 @@ class HomePage extends React.Component {
         console.log('Updating configuration to ' + JSON.stringify(newConfig));
     }
 
+    resetConfiguration() {
+        console.log('Resetting configuration...');
+    }
+
     render() {
         let config = this.configurationManager.getConfig();
 
@@ -68,6 +73,7 @@ class HomePage extends React.Component {
                     contentLabel="On Deck Settings">
                     <SettingsForm config={config}
                         onClose={this.setModalState}
+                        onReset={this.resetConfiguration}
                         onSave={this.updateConfiguration} />
                 </ReactModal>
             </Shortcuts>
