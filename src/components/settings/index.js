@@ -16,6 +16,7 @@ class SettingsForm extends React.Component {
 
         this.closeModal = this.closeModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.save = this.save.bind(this);
     }
 
     closeModal() {
@@ -23,18 +24,30 @@ class SettingsForm extends React.Component {
     }
 
     handleChange(evt) {
-
         let newConfig = this.state.current;
+        let name = evt.target.name;
         let val = evt.target.value;
+
         // check for numeric types since we have a mix
-        if (val && parseFloat(val) !== NaN) {
+        if (val && !isNaN(parseFloat(val))) {
             val = parseFloat(val);
+        }
+
+        if (name === 'geoColor') {
+            console.log('val: ' + val);
+            val = JSON.parse(val); // convert from string back to array
         }
 
         newConfig[evt.target.name] = val;
         this.setState({
             current: newConfig
         });
+    }
+
+    save(evt) {
+        evt.preventDefault();
+        this.props.onSave(this.state.current);
+        this.closeModal();
     }
 
     render() {
@@ -57,7 +70,7 @@ class SettingsForm extends React.Component {
 
                     <AisTextInput name="geoColor"
                         label="Data Color [R, G, B]"
-                        value={config.geoColor}
+                        value={JSON.stringify(config.geoColor)}
                         onChange={this.handleChange}
                         />
 
@@ -94,7 +107,7 @@ class SettingsForm extends React.Component {
 
                     <div className="SettingsForm__actions">
                         <a onClick={this.closeModal}>Cancel</a>
-                        <button onClick={this.closeModal}>Save</button>
+                        <button onClick={this.save}>Save</button>
                     </div>
                 </form>
 
@@ -105,7 +118,8 @@ class SettingsForm extends React.Component {
 
 SettingsForm.propTypes = {
     config: PropTypes.object.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired
 };
 
 export default SettingsForm;

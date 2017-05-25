@@ -24,15 +24,13 @@ class HomePage extends React.Component {
         };
 
         this.setModalState = this.setModalState.bind(this);
+        this.updateConfiguration = this.updateConfiguration.bind(this);
     }
 
     getChildContext() {
         return {
             shortcuts: this.shortcutManager
         };
-    }
-
-    componentWillMount() {
     }
 
     setModalState(action) {
@@ -46,6 +44,10 @@ class HomePage extends React.Component {
                 isModalOpen: false
             });
         }
+    }
+
+    updateConfiguration(newConfig) {
+        console.log('Updating configuration to ' + JSON.stringify(newConfig));
     }
 
     render() {
@@ -64,7 +66,9 @@ class HomePage extends React.Component {
                         }
                     }}
                     contentLabel="On Deck Settings">
-                    <SettingsForm config={config} onClose={this.setModalState} />
+                    <SettingsForm config={config}
+                        onClose={this.setModalState}
+                        onSave={this.updateConfiguration} />
                 </ReactModal>
             </Shortcuts>
         );
