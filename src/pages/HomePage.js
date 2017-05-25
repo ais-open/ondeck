@@ -19,7 +19,7 @@ class HomePage extends React.Component {
 
         const config = this.configurationManager.getConfig();
         this.state = {
-            isModalOpen: true,
+            isModalOpen: false,
             configuration: config
         };
 
@@ -49,18 +49,37 @@ class HomePage extends React.Component {
 
     updateConfiguration(newConfig) {
         console.log('Updating configuration to ' + JSON.stringify(newConfig));
+        this.configurationManager.saveConfig(newConfig);
+        location.reload();
+        /*
+         * Ok, why location.reload()?
+         * The map below renders to a webgl context so when there are no dom
+         * changes when the state changes so the map doesn't re-render. This
+         * is a cheap way to get it done until I can figure out how to do it
+         * properly and just call setState like a normal person.
+         */
+        // this.setState({
+        //     configuration: newConfig
+        // });
     }
 
     resetConfiguration() {
         console.log('Resetting configuration...');
+        this.configurationManager.reset();
+        location.reload();
+        // see note in updateConfiguration()
+        // this.setState({
+        //     configuration: this.configurationManager.getConfig()
+        // });
     }
 
     render() {
-        let config = this.configurationManager.getConfig();
+        let config = this.state.configuration;
+        console.log('Rendering map with config: ' + JSON.stringify(config));
 
         return (
             <Shortcuts name="SETTINGS" handler={this.setModalState}>
-                <MapComponent />
+                <MapComponent configuration={config} />
                 <ReactModal isOpen={this.state.isModalOpen}
                     style={{
                         overlay: {

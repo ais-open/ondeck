@@ -75,7 +75,7 @@ class SettingsForm extends React.Component {
                         />
 
                     <AisTextInput name="geoColor"
-                        label="Data Color [R, G, B]"
+                        label="Data Color [R, G, B, A]"
                         value={JSON.stringify(config.geoColor)}
                         onChange={this.handleChange}
                         />

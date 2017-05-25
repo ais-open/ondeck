@@ -1,12 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import MapGL from 'react-map-gl';
 import DeckGL, { GeoJsonLayer } from 'deck.gl';
 import Measure from 'react-measure';
 import 'whatwg-fetch';
 
 import initialViewport from './initialViewport';
-import dataStyling from './dataStyling';
-import mapStyling from './mapStyling';
+import MapStyles from './MapStyles';
 
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYm93bWFubWMiLCJhIjoieE9WenlhayJ9.QFS8jQtCusMhwwVSMQIg9w';
@@ -27,7 +27,7 @@ class MapComponent extends React.Component {
     }
 
     componentDidMount() {
-        const dataUrl = APP_CONFIG.dataUrl;
+        const dataUrl = this.props.configuration.dataUrl;
         fetch(dataUrl).then(response => {
             return response.json();
         }).then(data => {
@@ -53,10 +53,14 @@ class MapComponent extends React.Component {
     }
 
     render() {
+        console.log('Rendering MapComponent...');
+        const config = this.props.configuration;
+        const mapStyles = new MapStyles();
 
         const {data, viewport, width, height} = this.state;
-        const layerOpts = Object.assign(dataStyling, {data});
+        const layerOpts = Object.assign(mapStyles.getDataStyling(config), {data});
         const layer = new GeoJsonLayer(layerOpts);
+        const mapStyling = mapStyles.getMapStyling(config);
 
         return (
                 <Measure onMeasure={this.onResize}>
@@ -79,5 +83,9 @@ class MapComponent extends React.Component {
         );
     }
 }
+
+MapComponent.propTypes = {
+    configuration: PropTypes.object.isRequired
+};
 
 export default MapComponent;
