@@ -52,7 +52,7 @@ class HomePage extends React.Component {
         let config = this.configurationManager.getConfig();
 
         return (
-            <Shortcuts name='SETTINGS' handler={this.setModalState}>
+            <Shortcuts name="SETTINGS" handler={this.setModalState}>
                 <MapComponent />
                 <ReactModal isOpen={this.state.isModalOpen}
                     style={{
@@ -64,7 +64,7 @@ class HomePage extends React.Component {
                         }
                     }}
                     contentLabel="On Deck Settings">
-                    <SettingsForm onClose={this.setModalState} />
+                    <SettingsForm config={config} onClose={this.setModalState} />
                 </ReactModal>
             </Shortcuts>
         );

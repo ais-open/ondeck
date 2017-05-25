@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import AisNumberInput from '../form/AisNumberInput';
 import AisTextInput from '../form/AisTextInput';
 
 
@@ -8,6 +9,10 @@ class SettingsForm extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            current: Object.assign({}, this.props.config)
+        };
 
         this.closeModal = this.closeModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -17,10 +22,28 @@ class SettingsForm extends React.Component {
         this.props.onClose();
     }
 
-    handleChange() {
+    handleChange(evt) {
+
+        let newConfig = this.state.current;
+        let val = evt.target.value;
+        // check for numeric types since we have a mix
+        if (val && parseFloat(val) !== NaN) {
+            val = parseFloat(val);
+        }
+
+        newConfig[evt.target.name] = val;
+        this.setState({
+            current: newConfig
+        });
     }
 
     render() {
+
+        if (!this.state) {
+            return null;
+        }
+
+        const config = this.state.current;
 
         return (
             <div className="SettingsForm">
@@ -28,36 +51,44 @@ class SettingsForm extends React.Component {
                 <form>
                     <AisTextInput name="dataUrl"
                         label="Data URL"
+                        value={config.dataUrl}
                         onChange={this.handleChange}
                         />
 
                     <AisTextInput name="geoColor"
                         label="Data Color [R, G, B]"
+                        value={config.geoColor}
                         onChange={this.handleChange}
                         />
 
-                    <AisTextInput name="pointRadius"
+                    <AisNumberInput name="pointRadius"
                         label="Point Radius"
+                        value={config.pointRadius}
                         onChange={this.handleChange}
                         />
 
-                    <AisTextInput name="lineWidth"
+                    <AisNumberInput name="lineWidth"
                         label="Line Width"
+                        value={config.lineWidth}
                         onChange={this.handleChange}
                         />
 
-                    <AisTextInput name="opacity"
+                    <AisNumberInput name="opacity"
                         label="Opacity (0 - 1)"
+                        value={config.opacity}
+                        step={0.1}
                         onChange={this.handleChange}
                         />
 
-                    <AisTextInput name="bearing"
+                    <AisNumberInput name="bearing"
                         label="Bearing (left/right)"
+                        value={config.bearing}
                         onChange={this.handleChange}
                         />
 
-                    <AisTextInput name="pitch"
+                    <AisNumberInput name="pitch"
                         label="Pitch (up/down)"
+                        value={config.pitch}
                         onChange={this.handleChange}
                         />
 
@@ -73,6 +104,7 @@ class SettingsForm extends React.Component {
 }
 
 SettingsForm.propTypes = {
+    config: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired
 };
 

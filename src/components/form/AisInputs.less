@@ -3,11 +3,12 @@
 
 @ati-transition: all 0.35s ease-out;
 
-.AisTextInput {
+
+.AisInput() {
     margin: 0.75em 0;
 }
 
-.AisTextInput__input {
+.AisInput__input() {
     background: darken(@clr-white, 3%);
     border: 1px solid transparent;
     border-top: none;
@@ -16,13 +17,13 @@
     box-shadow: inset 0 1px 3px rgba(0,0,0,.39), 0 -1px 1px @clr-white, 0 1px 0 @clr-white;
     box-sizing: border-box;
     color: @clr-gray;
+    display: block;
     font-size: 16px;
     margin-top: 0.25em;
     min-height: 34px;
     outline: none;
     padding: 0.5em;
     transition: @ati-transition;
-    width: 100%;
 
     &:focus {
         background: @clr-white;
@@ -35,10 +36,33 @@
     }
 }
 
-.AisTextInput__label {
+.AisInput__label() {
     color: @clr-gray;
     font-size: 12px;
     font-weight: bold;
     letter-spacing: 0.14em;
     text-transform: uppercase;
+}
+
+
+.AisTextInput {
+    .AisInput();
+}
+.AisTextInput__input {
+    .AisInput__input();
+    width: 100%;
+}
+.AisTextInput__label {
+    .AisInput__label();
+}
+
+.AisNumberInput {
+    .AisInput();
+}
+.AisNumberInput__input {
+    .AisInput__input();
+    width: 64px;
+}
+.AisNumberInput__label {
+    .AisInput__label();
 }
