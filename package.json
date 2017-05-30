@@ -18,7 +18,8 @@
     "clean-dist": "npm run remove-dist && mkdir dist",
     "remove-dist": "rimraf ./dist",
     "prebuild": "npm run clean-dist && npm run lint && npm run test",
-    "build": "babel-node tools/build.js && npm run open:dist",
+    "build": "babel-node tools/build.js",
+    "postbuild": "npm run copyconfig",
     "test": "jest",
     "test:CI": "babel-node tools/testCi.js",
     "test:cover": "npm run test -- --coverage ",
@@ -28,7 +29,10 @@
     "analyze-bundle": "babel-node ./tools/analyzeBundle.js",
     "copyfontawesome": "copyfiles -f node_modules/font-awesome/fonts/* src/fonts",
     "copyreactwidgets": "copyfiles -f node_modules/react-widgets/dist/fonts/* src/fonts",
-    "copyfonts": "copyfiles -f src/fonts/* dist/fonts"
+    "copyfonts": "copyfiles -f src/fonts/* dist/fonts",
+    "copyconfig": "copyfiles -f src/*app-config.js dist",
+    "preserver": "npm run build",
+    "server": "npm run open:dist"
   },
   "author": "Applied Information Sciences",
   "license": "",

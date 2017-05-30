@@ -11,7 +11,7 @@ export const SAN_FRANCISCO = {
 export const DAYTON = {
     latitude: 39.7589,
     longitude: -84.1916,
-    zoom: 12,
+    zoom: 3,
     bearing: APP_CONFIG.bearing,
     pitch: APP_CONFIG.pitch
 };

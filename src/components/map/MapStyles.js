@@ -24,7 +24,7 @@ export default class MapStyles {
             'sources': {
                 'raster-tiles': {
                     'type': 'raster',
-                    'tiles': APP_CONFIG.baseTiles,
+                    'tiles': config.baseTiles,
                     'tileSize': 256
                 }
             },
