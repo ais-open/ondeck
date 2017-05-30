@@ -1,27 +1,23 @@
-// This file configures a web server for testing the production build
-// on your local machine.
+'use strict';
+const nodeStatic = require('node-static');
 
-import browserSync from 'browser-sync';
-import historyApiFallback from 'connect-history-api-fallback';
-import {chalkProcessing} from './chalkConfig';
+const PORT = process.env.PORT || 9000;
+const HOST = process.env.IP || 'localhost';
+
+const DIST = './dist';
+
+
+// Create a node-static server instance to serve the dist folder
+const file = new nodeStatic.Server(DIST, {
+    cache: false
+});
 
 /* eslint-disable no-console */
+console.log(`Serving ${DIST} at http://localhost:${PORT}...`);
 
-console.log(chalkProcessing('Opening production build...'));
-
-// Run Browsersync
-browserSync({
-  port: 4000,
-  ui: {
-    port: 4001
-  },
-  server: {
-    baseDir: 'dist'
-  },
-
-  files: [
-    'src/*.html'
-  ],
-
-  middleware: [historyApiFallback()]
-});
+require('http').createServer(function (request, response) {
+    request.addListener('end', function () {
+        // Serve files!
+        file.serve(request, response);
+    }).resume();
+}).listen(PORT, HOST);

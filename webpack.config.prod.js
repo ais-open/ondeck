@@ -14,7 +14,10 @@ const GLOBALS = {
 
 export default {
     resolve: {
-        extensions: ['*', '.js', '.jsx', '.json']
+        extensions: ['*', '.js', '.jsx', '.json'],
+        alias: {
+            'mapbox-gl$': path.resolve('./node_modules/mapbox-gl/dist/mapbox-gl.js')
+        }
     },
     devtool: 'source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
     entry: path.resolve(__dirname, 'src/index'),
