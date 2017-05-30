@@ -12,8 +12,10 @@ const file = new nodeStatic.Server(DIST, {
     cache: false
 });
 
+//console.log('ENV: ' + JSON.stringify(process.env));
+
 /* eslint-disable no-console */
-console.log(`Serving ${DIST} at http://localhost:${PORT}...`);
+console.log(`Serving ${DIST} at http://${HOST}:${PORT}...`);
 
 require('http').createServer(function (request, response) {
     request.addListener('end', function () {
