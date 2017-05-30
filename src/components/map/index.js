@@ -16,8 +16,13 @@ class MapComponent extends React.Component {
     constructor(props) {
         super(props);
 
+        let vp = Object.assign({}, initialViewport, {
+            bearing: props.configuration.bearing,
+            pitch: props.configuration.pitch
+        });
+
         this.state = {
-            viewport: initialViewport,
+            viewport: vp,
             width: 0,
             height: 0
         };
