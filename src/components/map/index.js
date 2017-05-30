@@ -53,7 +53,7 @@ class MapComponent extends React.Component {
     }
 
     render() {
-        console.log('Rendering MapComponent...');
+        //console.log('Rendering MapComponent...');
         const config = this.props.configuration;
         const mapStyles = new MapStyles();
 
