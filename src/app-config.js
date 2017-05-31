@@ -1,5 +1,5 @@
 APP_CONFIG = {
-    dataUrl: '/data/dayton.geojson',
+    dataUrl: '/data/rodents.geojson',
     baseTiles: [
         'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
         'http://b.tile.openstreetmap.org/{z}/{x}/{y}.png'
