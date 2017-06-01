@@ -51,6 +51,16 @@ class MapComponent extends React.Component {
             console.log('Error getting data from ' + dataUrl, error);
         });
     }
+    
+    componentWillReceiveProps(nextProps) {
+        let vp = Object.assign({}, this.state.viewport, {
+            bearing: nextProps.configuration.bearing,
+            pitch: nextProps.configuration.pitch
+        });
+        this.setState({
+            viewport: vp
+        });
+    }
 
     onChangeViewport(newViewport) {
         this.setState({

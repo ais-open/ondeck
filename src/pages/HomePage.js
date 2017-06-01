@@ -50,7 +50,7 @@ class HomePage extends React.Component {
     updateConfiguration(newConfig) {
         console.log('Updating configuration to ' + JSON.stringify(newConfig));
         this.configurationManager.saveConfig(newConfig);
-        location.reload();
+        //location.reload();
         /*
          * Ok, why location.reload()?
          * The map below renders to a webgl context so when there are no dom
@@ -58,19 +58,19 @@ class HomePage extends React.Component {
          * is a cheap way to get it done until I can figure out how to do it
          * properly and just call setState like a normal person.
          */
-        // this.setState({
-        //     configuration: newConfig
-        // });
+        this.setState({
+            configuration: newConfig
+        });
     }
 
     resetConfiguration() {
         console.log('Resetting configuration...');
         this.configurationManager.reset();
-        location.reload();
+        //location.reload();
         // see note in updateConfiguration()
-        // this.setState({
-        //     configuration: this.configurationManager.getConfig()
-        // });
+        this.setState({
+            configuration: this.configurationManager.getConfig()
+        });
     }
 
     render() {
