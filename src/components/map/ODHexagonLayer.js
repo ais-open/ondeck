@@ -11,7 +11,7 @@ const LIGHT_SETTINGS = {
     numberOfLights: 2
 };
 
-const colorRange = [
+const colorRangeBlue2Red = [
     [1, 152, 189],
     [73, 227, 206],
     [216, 254, 181],
@@ -19,6 +19,16 @@ const colorRange = [
     [254, 173, 84],
     [209, 55, 78]
 ];
+
+const colorRangeWhite2Red = [
+    [255, 255, 178],
+    [254, 217, 118],
+    [254, 178, 76],
+    [253, 141, 60],
+    [240, 59, 32],
+    [189, 0, 38]
+];
+const colorRange = colorRangeWhite2Red;
 
 const elevationScale = {
     min: 1,
