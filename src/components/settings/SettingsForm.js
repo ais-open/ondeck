@@ -66,7 +66,6 @@ class SettingsForm extends React.Component {
 
         return (
             <div className="SettingsForm">
-                <h1>Settings Form</h1>
                 <form>
                     <AisTextInput name="dataUrl"
                         label="Data URL"

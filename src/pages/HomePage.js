@@ -5,7 +5,8 @@ import ReactModal from 'react-modal';
 
 import ConfigurationManager from '../config';
 import MapComponent from '../components/map';
-import SettingsForm from '../components/settings';
+//import SettingsForm from '../components/settings/SettingsForm';
+import SettingsPane from '../components/settings/SettingsPane';
 import Keymap from './HomePageKeymap';
 
 
@@ -77,24 +78,26 @@ class HomePage extends React.Component {
         let config = this.state.configuration;
         console.log('Rendering map with config: ' + JSON.stringify(config));
 
+        // <ReactModal isOpen={this.state.isModalOpen}
+        //     style={{
+        //         overlay: {
+        //             backgroundColor: 'rgba(0, 0, 0, 0.75)'
+        //         },
+        //         content: {
+        //             backgroundColor: '#eee'
+        //         }
+        //     }}
+        //     contentLabel="On Deck Settings">
+        //     <SettingsForm config={config}
+        //         onClose={this.setModalState}
+        //         onReset={this.resetConfiguration}
+        //         onSave={this.updateConfiguration} />
+        // </ReactModal>
+
         return (
             <Shortcuts name="SETTINGS" handler={this.setModalState}>
                 <MapComponent configuration={config} />
-                <ReactModal isOpen={this.state.isModalOpen}
-                    style={{
-                        overlay: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.75)'
-                        },
-                        content: {
-                            backgroundColor: '#eee'
-                        }
-                    }}
-                    contentLabel="On Deck Settings">
-                    <SettingsForm config={config}
-                        onClose={this.setModalState}
-                        onReset={this.resetConfiguration}
-                        onSave={this.updateConfiguration} />
-                </ReactModal>
+                <SettingsPane />
             </Shortcuts>
         );
     }
