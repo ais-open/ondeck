@@ -14,14 +14,9 @@ class SettingsForm extends React.Component {
             current: Object.assign({}, this.props.config)
         };
 
-        this.closeModal = this.closeModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.save = this.save.bind(this);
         this.reset = this.reset.bind(this);
-    }
-
-    closeModal() {
-        this.props.onClose();
     }
 
     handleChange(evt) {
@@ -111,7 +106,7 @@ class SettingsForm extends React.Component {
                         />
 
                     <div className="SettingsForm__actions">
-                        <a onClick={this.closeModal}>Cancel</a>
+                        <a onClick={this.props.onCancel}>Cancel</a>
                         <a onClick={this.reset}>Reset</a>
                         <button onClick={this.save}>Save</button>
                     </div>
@@ -124,7 +119,7 @@ class SettingsForm extends React.Component {
 
 SettingsForm.propTypes = {
     config: PropTypes.object.isRequired,
-    onClose: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
     onReset: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired
 };
