@@ -48,7 +48,7 @@ class SettingsForm extends React.Component {
 
     reset() {
         this.props.onReset();
-        this.closeModal();
+        this.props.onClose();
     }
 
     render() {
@@ -106,7 +106,7 @@ class SettingsForm extends React.Component {
                         />
 
                     <div className="SettingsForm__actions">
-                        <a onClick={this.props.onCancel}>Cancel</a>
+                        <a onClick={this.props.onClose}>Cancel</a>
                         <a onClick={this.reset}>Reset</a>
                         <button onClick={this.save}>Save</button>
                     </div>
@@ -119,7 +119,7 @@ class SettingsForm extends React.Component {
 
 SettingsForm.propTypes = {
     config: PropTypes.object.isRequired,
-    onCancel: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
     onReset: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired
 };

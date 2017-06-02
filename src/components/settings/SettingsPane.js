@@ -7,12 +7,6 @@ class SettingsPane extends React.Component {
 
     constructor(props) {
         super(props);
-        
-        this.cancel = this.cancel.bind(this);
-    }
-
-    cancel() {
-        this.props.onClose();
     }
 
     render() {
@@ -29,15 +23,18 @@ class SettingsPane extends React.Component {
 
                 <h1>On Deck</h1>
 
-                <SettingsForm onCancel={this.cancel} />
+                <SettingsForm 
+                    onClose={this.props.onClose} 
+                    onReset={this.props.onReset} />
             </div>
         );
     }
 }
 
 SettingsPane.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool.isRequired
+    onReset: PropTypes.func.isRequired
 };
 
 export default SettingsPane;
