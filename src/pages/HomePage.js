@@ -20,11 +20,11 @@ class HomePage extends React.Component {
 
         const config = this.configurationManager.getConfig();
         this.state = {
-            isModalOpen: false,
+            areSettingsOpen: false,
             configuration: config
         };
 
-        this.setModalState = this.setModalState.bind(this);
+        this.setSettingsPaneVisibility = this.setSettingsPaneVisibility.bind(this);
         this.updateConfiguration = this.updateConfiguration.bind(this);
         this.resetConfiguration = this.resetConfiguration.bind(this);
     }
@@ -35,15 +35,16 @@ class HomePage extends React.Component {
         };
     }
 
-    setModalState(action) {
+    setSettingsPaneVisibility(action) {
         if (action === 'OPEN') {
+            let toggled = !this.state.areSettingsOpen;
             this.setState({
-                isModalOpen: true
+                areSettingsOpen: toggled
             });
         }
         else {
             this.setState({
-                isModalOpen: false
+                areSettingsOpen: false
             });
         }
     }
@@ -95,9 +96,11 @@ class HomePage extends React.Component {
         // </ReactModal>
 
         return (
-            <Shortcuts name="SETTINGS" handler={this.setModalState}>
+            <Shortcuts name="SETTINGS" handler={this.setSettingsPaneVisibility}>
                 <MapComponent configuration={config} />
-                <SettingsPane />
+                <SettingsPane 
+                    isOpen={this.state.areSettingsOpen} 
+                    onClose={this.setSettingsPaneVisibility} />
             </Shortcuts>
         );
     }

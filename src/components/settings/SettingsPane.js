@@ -1,5 +1,5 @@
 import React from 'react';
-//import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import SettingsForm from './SettingsForm';
 
 
@@ -7,22 +7,17 @@ class SettingsPane extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
     }
 
     render() {
 
-        if (!this.state) {
-            return null;
+        let className = "SettingsPane SettingsPane__closed";
+        if (this.props.isOpen) {
+            className = "SettingsPane SettingsPane__open";
         }
-
-        const config = this.state.current;
-
         return (
-            <div className="SettingsPane">
-                <div className="SettingsPane__close" onClick={this.closePane}>
+            <div className={className}>
+                <div className="SettingsPane__close-btn" onClick={this.props.onClose}>
                     <i className="fa fa-close" />
                 </div>
 
@@ -33,5 +28,10 @@ class SettingsPane extends React.Component {
         );
     }
 }
+
+SettingsPane.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    isOpen: PropTypes.bool.isRequired
+};
 
 export default SettingsPane;

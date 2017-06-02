@@ -4,14 +4,21 @@
     bottom: 0;
     box-shadow: 0 0 1.0em @clr-black;
     color: @clr-black;
-    left: 0;
     padding: 0.5em 1.5em;
     position: absolute;
     top: 0;
+    transition: all 0.35s ease-out;
     width: 45%;
 }
 
-.SettingsPane__close {
+.SettingsPane__closed {
+    left: -50%;
+}
+.SettingsPane__open {
+    left: 0;
+}
+
+.SettingsPane__close-btn {
     color: @clr-gray;
     cursor: pointer;
     float: right;
