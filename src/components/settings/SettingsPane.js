@@ -24,6 +24,7 @@ class SettingsPane extends React.Component {
                 <h1>On Deck</h1>
 
                 <SettingsForm 
+                    config={this.props.configuration}
                     onClose={this.props.onClose} 
                     onReset={this.props.onReset} />
             </div>
@@ -32,6 +33,7 @@ class SettingsPane extends React.Component {
 }
 
 SettingsPane.propTypes = {
+    configuration: PropTypes.object.isRequired,
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onReset: PropTypes.func.isRequired
