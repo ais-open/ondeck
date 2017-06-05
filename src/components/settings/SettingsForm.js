@@ -36,6 +36,7 @@ class SettingsForm extends React.Component {
         }
 
         newConfig[evt.target.name] = val;
+
         this.setState({
             current: newConfig
         });
@@ -71,10 +72,11 @@ class SettingsForm extends React.Component {
 
                     <AisDropdownList name="baseTiles"
                         label="Base Map"
-                        value={config.baseTiles}
-                        options={config.availableBaseMaps}
                         valueField="url"
                         displayField="name"
+                        value={config.baseTiles}
+                        options={config.availableBaseMaps}
+                        onChange={this.handleChange}
                         />
 
                     <AisNumberInput name="bearing"

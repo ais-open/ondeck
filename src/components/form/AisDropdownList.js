@@ -4,7 +4,7 @@ import DropdownList from 'react-widgets/lib/DropdownList';
 
 
 const AisDropdownList = ({name, label, onChange, value, valueField, displayField, options}) => {
-    
+
     return (
         <div className="AisDropdownList">
             <label className="AisDropdownList__label" htmlFor={name}>{label}</label>
@@ -14,6 +14,14 @@ const AisDropdownList = ({name, label, onChange, value, valueField, displayField
                 valueField={valueField}
                 textField={displayField}
                 defaultValue={value}
+                onChange={selected => {
+                    onChange({
+                        target: {
+                            name: name,
+                            value: selected[valueField]
+                        }
+                    });
+                }}
                 />
         </div>
     );

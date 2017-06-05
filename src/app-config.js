@@ -7,6 +7,9 @@ APP_CONFIG = {
     availableBaseMaps: [{
         name: 'Open Street Map',
         url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    }, {
+        name: 'Awesome Tiles',
+        url: 'http://foo.bar.baz.com/{z}/{x}/{y}.png'
     }],
     baseTiles: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
     tileSize: 256,
