@@ -67,11 +67,6 @@ class HomePage extends React.Component {
         let config = this.state.configuration;
         console.log('Rendering map with config: ' + JSON.stringify(config));
 
-        //     <SettingsForm config={config}
-        //         onClose={this.setModalState}
-        //         onReset={this.resetConfiguration}
-        //         onSave={this.updateConfiguration} />
-
         return (
             <Shortcuts name="SETTINGS" handler={this.setSettingsPaneVisibility}>
                 <MapComponent configuration={config} />

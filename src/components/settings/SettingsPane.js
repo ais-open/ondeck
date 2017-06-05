@@ -26,7 +26,8 @@ class SettingsPane extends React.Component {
                 <SettingsForm 
                     config={this.props.configuration}
                     onClose={this.props.onClose} 
-                    onReset={this.props.onReset} />
+                    onReset={this.props.onReset} 
+                    onSave={this.props.onSave} />
             </div>
         );
     }
@@ -36,7 +37,8 @@ SettingsPane.propTypes = {
     configuration: PropTypes.object.isRequired,
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    onReset: PropTypes.func.isRequired
+    onReset: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired
 };
 
 export default SettingsPane;

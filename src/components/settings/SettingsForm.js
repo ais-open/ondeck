@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import AisDropdownList from '../form/AisDropdownList';
 import AisNumberInput from '../form/AisNumberInput';
 import AisTextInput from '../form/AisTextInput';
 
@@ -43,7 +44,7 @@ class SettingsForm extends React.Component {
     save(evt) {
         evt.preventDefault();
         this.props.onSave(this.state.current);
-        this.closeModal();
+        this.props.onClose();
     }
 
     reset() {
@@ -68,29 +69,12 @@ class SettingsForm extends React.Component {
                         onChange={this.handleChange}
                         />
 
-                    <AisTextInput name="geoColor"
-                        label="Data Color [R, G, B, A]"
-                        value={JSON.stringify(config.geoColor)}
-                        onChange={this.handleChange}
-                        />
-
-                    <AisNumberInput name="pointRadius"
-                        label="Point Radius"
-                        value={config.pointRadius}
-                        onChange={this.handleChange}
-                        />
-
-                    <AisNumberInput name="lineWidth"
-                        label="Line Width"
-                        value={config.lineWidth}
-                        onChange={this.handleChange}
-                        />
-
-                    <AisNumberInput name="opacity"
-                        label="Opacity (0 - 1)"
-                        value={config.opacity}
-                        step={0.1}
-                        onChange={this.handleChange}
+                    <AisDropdownList name="baseTiles"
+                        label="Base Map"
+                        value={config.baseTiles}
+                        options={config.availableBaseMaps}
+                        valueField="url"
+                        displayField="name"
                         />
 
                     <AisNumberInput name="bearing"
@@ -125,3 +109,31 @@ SettingsForm.propTypes = {
 };
 
 export default SettingsForm;
+
+// GeoJSON Attributes
+/*
+<AisTextInput name="geoColor"
+    label="Data Color [R, G, B, A]"
+    value={JSON.stringify(config.geoColor)}
+    onChange={this.handleChange}
+    />
+
+<AisNumberInput name="pointRadius"
+    label="Point Radius"
+    value={config.pointRadius}
+    onChange={this.handleChange}
+    />
+
+<AisNumberInput name="lineWidth"
+    label="Line Width"
+    value={config.lineWidth}
+    onChange={this.handleChange}
+    />
+
+<AisNumberInput name="opacity"
+    label="Opacity (0 - 1)"
+    value={config.opacity}
+    step={0.1}
+    onChange={this.handleChange}
+    />
+    */
