@@ -16,6 +16,6 @@ export const BOSTON = {
     latitude: 42.3301,
     longitude: -71.0589,
     zoom: 12
-}
+};
 
 export default BOSTON;

@@ -27,4 +27,14 @@ const AisDropdownList = ({name, label, onChange, value, valueField, displayField
     );
 }
 
+AisDropdownList.propTypes = {
+    name: PropTypes.string,
+    label: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.string,
+    valueField: PropTypes.string,
+    displayField: PropTypes.string,
+    options: PropTypes.array
+};
+
 export default AisDropdownList;

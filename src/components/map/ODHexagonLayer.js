@@ -11,14 +11,14 @@ const LIGHT_SETTINGS = {
     numberOfLights: 2
 };
 
-const colorRangeBlue2Red = [
-    [1, 152, 189],
-    [73, 227, 206],
-    [216, 254, 181],
-    [254, 237, 177],
-    [254, 173, 84],
-    [209, 55, 78]
-];
+// const colorRangeBlue2Red = [
+//     [1, 152, 189],
+//     [73, 227, 206],
+//     [216, 254, 181],
+//     [254, 237, 177],
+//     [254, 173, 84],
+//     [209, 55, 78]
+// ];
 
 const colorRangeWhite2Red = [
     [255, 255, 178],
@@ -128,13 +128,13 @@ export default class ODHexagonLayer extends Component {
             })
         ];
 
-        return <DeckGL
+        return (<DeckGL
             {...viewport}
             width={width}
             height={height}
             layers={layers}
             onWebGLInitialized={this._initialize}
-        />;
+        />);
     }
 }
 
