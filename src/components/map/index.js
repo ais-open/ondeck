@@ -90,7 +90,6 @@ class MapComponent extends React.Component {
         }
 
         const mapStyling = mapStyles.getMapStyling(config);
-
         return (
             <Measure onMeasure={this.onResize}>
                 <div className="Map">
@@ -106,6 +105,7 @@ class MapComponent extends React.Component {
                             width={width}
                             height={height}
                             viewport={viewport}
+                            colorRange={config.colorRange}
                             data={data || []}
                         />
                     </MapGL>
