@@ -1,9 +1,15 @@
 APP_CONFIG = {
     dataUrl: '/data/rodents.geojson',
-    // baseTiles: [
-    //     'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    //     'http://b.tile.openstreetmap.org/{z}/{x}/{y}.png'
-    // ],
+    baseTiles: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    colorRange: 'Yellow2Red_3Classes',
+    tileSize: 256,
+    geoColor: [249, 105, 13],
+    pointRadius: 50,
+    lineWidth: 20,
+    elevation: 1,
+    opacity: 0.8,
+    bearing: -5, // left/right
+    pitch: 35,    // up/down
     availableBaseMaps: [{
         name: 'Open Street Map',
         url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -11,7 +17,6 @@ APP_CONFIG = {
         name: 'Awesome Tiles',
         url: 'http://foo.bar.baz.com/{z}/{x}/{y}.png'
     }],
-    baseTiles: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
     availableColorRanges: {
         'Blues_3Classes': [
             [222,235,247],
@@ -83,14 +88,5 @@ APP_CONFIG = {
             [227,26,28],
             [177,0,38]
         ]
-    },
-    colorRange: 'Yellow2Red_3Classes',
-    tileSize: 256,
-    geoColor: [249, 105, 13],
-    pointRadius: 50,
-    lineWidth: 20,
-    elevation: 1,
-    opacity: 0.8,
-    bearing: -5, // left/right
-    pitch: 35    // up/down
+    }
 };
