@@ -15,10 +15,14 @@ const AisDropdownList = ({name, label, onChange, value, valueField, displayField
                 textField={displayField}
                 defaultValue={value}
                 onChange={selected => {
+                    let newVal = selected;
+                    if (valueField) {
+                        newVal = selected[valueField]
+                    }
                     onChange({
                         target: {
                             name: name,
-                            value: selected[valueField]
+                            value: newVal
                         }
                     });
                 }}

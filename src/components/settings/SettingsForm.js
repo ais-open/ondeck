@@ -35,8 +35,8 @@ class SettingsForm extends React.Component {
             val = JSON.parse(val); // convert from string back to array
         }
 
-        newConfig[evt.target.name] = val;
-
+        newConfig[name] = val;
+        //console.log(`Updating ${name} to ${val}`);
         this.setState({
             current: newConfig
         });
@@ -60,6 +60,7 @@ class SettingsForm extends React.Component {
         }
 
         const config = this.state.current;
+        const colorRanges = Object.keys(config.availableColorRanges);
 
         return (
             <div className="SettingsForm">
@@ -76,6 +77,13 @@ class SettingsForm extends React.Component {
                         displayField="name"
                         value={config.baseTiles}
                         options={config.availableBaseMaps}
+                        onChange={this.handleChange}
+                        />
+                        
+                    <AisDropdownList name="colorRange"
+                        label="Color Range"
+                        value={config.colorRange}
+                        options={colorRanges}
                         onChange={this.handleChange}
                         />
 

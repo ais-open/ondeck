@@ -12,19 +12,16 @@ APP_CONFIG = {
         url: 'http://foo.bar.baz.com/{z}/{x}/{y}.png'
     }],
     baseTiles: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    availableColorRanges: [{
-        name: 'White2Red',
-        range: [
+    availableColorRanges: {
+        'White2Red': [
             [255, 255, 178],
             [254, 217, 118],
             [254, 178, 76],
             [253, 141, 60],
             [240, 59, 32],
             [189, 0, 38]
-        ]
-    }, {
-        name: 'Blue2Red',
-        range: [
+        ],
+        'Blue2Red': [
             [1, 152, 189],
             [73, 227, 206],
             [216, 254, 181],
@@ -32,15 +29,8 @@ APP_CONFIG = {
             [254, 173, 84],
             [209, 55, 78]
         ]
-    }],
-    colorRange: [
-        [1, 152, 189],
-        [73, 227, 206],
-        [216, 254, 181],
-        [254, 237, 177],
-        [254, 173, 84],
-        [209, 55, 78]
-    ],
+    },
+    colorRange: 'Blue2Red',
     tileSize: 256,
     geoColor: [249, 105, 13],
     pointRadius: 50,
