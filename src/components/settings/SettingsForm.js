@@ -60,7 +60,7 @@ class SettingsForm extends React.Component {
         }
 
         const config = this.state.current;
-        const colorRanges = Object.keys(config.availableColorRanges);
+        const colorRanges = Object.keys(APP_CONFIG.availableColorRanges);
 
         return (
             <div className="SettingsForm">
@@ -76,10 +76,10 @@ class SettingsForm extends React.Component {
                         valueField="url"
                         displayField="name"
                         value={config.baseTiles}
-                        options={config.availableBaseMaps}
+                        options={APP_CONFIG.availableBaseMaps}
                         onChange={this.handleChange}
                         />
-                        
+
                     <AisDropdownList name="colorRange"
                         label="Color Range"
                         value={config.colorRange}
