@@ -87,6 +87,12 @@ class SettingsForm extends React.Component {
                         onChange={this.handleChange}
                         />
 
+                    <AisNumberInput name="radius"
+                        label="Point Radius"
+                        value={config.radius}
+                        onChange={this.handleChange}
+                        />
+
                     <AisNumberInput name="bearing"
                         label="Bearing (left/right)"
                         value={config.bearing}
