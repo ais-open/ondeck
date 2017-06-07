@@ -103,8 +103,11 @@ class SettingsForm extends React.Component {
                         onChange={this.handleChange}
                         />
 
-                    <AisNumberInput name="pitch"
+                    <AisSlider name="pitch"
                         label="Pitch (up/down)"
+                        min={0}
+                        max={89}
+                        step={1}
                         value={config.pitch}
                         onChange={this.handleChange}
                         />
