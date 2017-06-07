@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import AisDropdownList from '../form/AisDropdownList';
 import AisNumberInput from '../form/AisNumberInput';
+import AisSlider from '../form/AisSlider';
 import AisTextInput from '../form/AisTextInput';
 
 
@@ -93,8 +94,11 @@ class SettingsForm extends React.Component {
                         onChange={this.handleChange}
                         />
 
-                    <AisNumberInput name="bearing"
+                    <AisSlider name="bearing"
                         label="Bearing (left/right)"
+                        min={0}
+                        max={360}
+                        step={1}
                         value={config.bearing}
                         onChange={this.handleChange}
                         />

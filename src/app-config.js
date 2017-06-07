@@ -4,7 +4,7 @@ APP_CONFIG = {
     // version here is larger than what they have, it throws their local copy
     // away and keeps this one. Good for when new attributes or other breaking
     // changes are introduced.
-    version: 1.1,
+    version: 1.2,
     dataUrl: '/data/rodents.geojson',
     baseTiles: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
     colorRange: 'Yellow2Red_3Classes',
@@ -14,7 +14,7 @@ APP_CONFIG = {
     lineWidth: 20,
     elevation: 1,
     opacity: 0.8,
-    bearing: -5, // left/right
+    bearing: 355, // left/right
     pitch: 35,    // up/down
     availableBaseMaps: [{
         name: 'Open Street Map',
