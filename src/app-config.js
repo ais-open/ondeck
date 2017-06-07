@@ -1,4 +1,10 @@
 APP_CONFIG = {
+    // version should be a double and always increasing. It is used to compare
+    // against the version the user has stored in their localStorage. If the 
+    // version here is larger than what they have, it throws their local copy
+    // away and keeps this one. Good for when new attributes or other breaking
+    // changes are introduced.
+    version: 1.1,
     dataUrl: '/data/rodents.geojson',
     baseTiles: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
     colorRange: 'Yellow2Red_3Classes',

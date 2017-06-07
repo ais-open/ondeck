@@ -9,13 +9,19 @@ export default class ConfigurationManager {
 
     getConfig() {
         // Try to return whatever is stored in localStorage
-        let ls = localStorage.getItem(KEY);
-        if (ls) {
-            return JSON.parse(ls);
+        let saved = localStorage.getItem(KEY);
+        if (saved) {
+            let savedObj = JSON.parse(saved);
+            if (savedObj.version && (savedObj.version >= this.defaultConfig.version)) {
+                return savedObj;
+            }
+            else {
+                console.log(`Stored version was ${savedObj.version} - upgrading to ${this.defaultConfig.version}`);
+            }
         }
 
-        // Else, it's their first time... give them our
-        // defaults from app-config.js
+        // Else, it's their first time or they have an outdated config... 
+        // give them our defaults from app-config.js
         let conf = Object.assign({}, this.defaultConfig);
         this.saveConfig(conf);
         return conf;
