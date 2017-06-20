@@ -1,12 +1,12 @@
 APP_CONFIG = {
     // version should be a double and always increasing. It is used to compare
-    // against the version the user has stored in their localStorage. If the 
+    // against the version the user has stored in their localStorage. If the
     // version here is larger than what they have, it throws their local copy
     // away and keeps this one. Good for when new attributes or other breaking
     // changes are introduced.
-    version: 1.2,
+    version: 1.3,
     dataUrl: '/data/rodents.geojson',
-    baseTiles: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    baseMap: 'http://localhost:8080/styles/planet-darkbox.json',
     colorRange: 'Yellow2Red_3Classes',
     radius: 50,
     tileSize: 256,
@@ -17,11 +17,17 @@ APP_CONFIG = {
     bearing: 355, // left/right
     pitch: 35,    // up/down
     availableBaseMaps: [{
-        name: 'Open Street Map',
-        url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        name: 'Planet - Darkbox',
+        url: 'http://localhost:8080/styles/planet-darkbox.json'
     }, {
-        name: 'Awesome Tiles',
-        url: 'http://foo.bar.baz.com/{z}/{x}/{y}.png'
+        name: 'Planet - Dark Matter',
+        url: 'http://localhost:8080/styles/planet-dark-matter.json'
+    }, {
+        name: 'Planet - Positron',
+        url: 'http://localhost:8080/styles/planet-positron.json'
+    }, {
+        name: 'Natural Earth - Homebase Dark',
+        url: 'http://localhost:8080/styles/ne-homebase-dark.json'
     }],
     availableColorRanges: {
         'Blues_3Classes': [

@@ -71,11 +71,11 @@ class SettingsForm extends React.Component {
                         onChange={this.handleChange}
                         />
 
-                    <AisDropdownList name="baseTiles"
+                    <AisDropdownList name="baseMap"
                         label="Base Map"
                         valueField="url"
                         displayField="name"
-                        value={config.baseTiles}
+                        value={config.baseMap}
                         options={APP_CONFIG.availableBaseMaps}
                         onChange={this.handleChange}
                         />
