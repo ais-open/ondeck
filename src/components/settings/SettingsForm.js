@@ -32,7 +32,6 @@ class SettingsForm extends React.Component {
         }
 
         if (name === 'geoColor') {
-            console.log('val: ' + val);
             val = JSON.parse(val); // convert from string back to array
         }
 

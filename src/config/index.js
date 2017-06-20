@@ -20,7 +20,7 @@ export default class ConfigurationManager {
             }
         }
 
-        // Else, it's their first time or they have an outdated config... 
+        // Else, it's their first time or they have an outdated config...
         // give them our defaults from app-config.js
         let conf = Object.assign({}, this.defaultConfig);
         this.saveConfig(conf);
@@ -29,7 +29,7 @@ export default class ConfigurationManager {
 
     saveConfig(config) {
         const c = JSON.stringify(config);
-        console.log('Saving configuration: ' + c);
+        //console.log('Saving configuration: ' + c);
         localStorage.setItem(KEY, c);
     }
 

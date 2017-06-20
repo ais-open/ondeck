@@ -48,7 +48,7 @@ class HomePage extends React.Component {
     }
 
     updateConfiguration(newConfig) {
-        console.log('Updating configuration to ' + JSON.stringify(newConfig));
+        //console.log('Updating configuration to ' + JSON.stringify(newConfig));
         this.configurationManager.saveConfig(newConfig);
         this.setState({
             configuration: newConfig
@@ -56,7 +56,6 @@ class HomePage extends React.Component {
     }
 
     resetConfiguration() {
-        console.log('Resetting configuration...');
         this.configurationManager.reset();
         this.setState({
             configuration: this.configurationManager.getConfig()
@@ -65,7 +64,7 @@ class HomePage extends React.Component {
 
     render() {
         let config = this.state.configuration;
-        console.log('Rendering map with config: ' + JSON.stringify(config));
+        //console.log('Rendering map with config: ' + JSON.stringify(config));
 
         return (
             <Shortcuts name="SETTINGS" handler={this.setSettingsPaneVisibility}>

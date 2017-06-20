@@ -7,8 +7,8 @@ const AisSlider = ({name, label, onChange, min=0, max=1000, step=1, value}) => {
     return (
         <div className="AisSlider">
             <label className="AisSlider__label" htmlFor={name}>{label} ({value})</label>
-            <Slider name={name} 
-                step={step} 
+            <Slider name={name}
+                step={step}
                 min={min}
                 max={max}
                 defaultValue={value}
@@ -24,7 +24,7 @@ const AisSlider = ({name, label, onChange, min=0, max=1000, step=1, value}) => {
                 />
         </div>
     );
-}
+};
 
 AisSlider.propTypes = {
     name: PropTypes.string,

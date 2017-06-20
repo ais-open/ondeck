@@ -17,7 +17,7 @@ const AisDropdownList = ({name, label, onChange, value, valueField, displayField
                 onChange={selected => {
                     let newVal = selected;
                     if (valueField) {
-                        newVal = selected[valueField]
+                        newVal = selected[valueField];
                     }
                     onChange({
                         target: {
@@ -29,7 +29,7 @@ const AisDropdownList = ({name, label, onChange, value, valueField, displayField
                 />
         </div>
     );
-}
+};
 
 AisDropdownList.propTypes = {
     name: PropTypes.string,

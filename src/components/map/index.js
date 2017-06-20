@@ -48,10 +48,10 @@ class MapComponent extends React.Component {
                 data: pts
             });
         }).catch(error => {
-            console.log('Error getting data from ' + dataUrl, error);
+            console.error('Error getting data from ' + dataUrl, error);
         });
     }
-    
+
     componentWillReceiveProps(nextProps) {
         let vp = Object.assign({}, this.state.viewport, {
             bearing: nextProps.configuration.bearing,
@@ -85,7 +85,6 @@ class MapComponent extends React.Component {
         // const layerOpts = Object.assign(mapStyles.getDataStyling(config), {data});
         // const layer = new GeoJsonLayer(layerOpts);
         if (!data) {
-            console.log('Data: ' + data);
             return null;
         }
 

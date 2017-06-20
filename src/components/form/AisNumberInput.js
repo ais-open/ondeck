@@ -20,11 +20,12 @@ const AisNumberInput = ({name, label, step=1, error, onChange, value}) => {
 };
 
 AisNumberInput.propTypes = {
-    name: PropTypes.string,
-    label: PropTypes.string,
     error: PropTypes.string,
-    onChange: PropTypes.func,
-    value: PropTypes.number
+    label: PropTypes.string,
+    name: PropTypes.string,
+    step: PropTypes.number,
+    value: PropTypes.number,
+    onChange: PropTypes.func
 };
 
 export default AisNumberInput;
