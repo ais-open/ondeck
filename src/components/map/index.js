@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MapGL from 'react-map-gl';
+import mapboxgl from 'mapbox-gl';
 //import DeckGL, { GeoJsonLayer } from 'deck.gl';
 //import DeckGL, { HexagonLayer } from 'deck.gl';
 import Measure from 'react-measure';
@@ -25,6 +26,7 @@ class MapComponent extends React.Component {
 
         this.state = {
             viewport: vp,
+            bounds: null,
             width: 0,
             height: 0
         };
@@ -39,12 +41,22 @@ class MapComponent extends React.Component {
             return response.json();
         }).then(data => {
             // need data in format: [[lng, lat], [lng, lat],...]
+            let bounds = null;
             const pts = [];
             data.features.forEach(feature => {
-                pts.push(feature.geometry.coordinates);
+                let coords = feature.geometry.coordinates;
+                pts.push(coords);
+                if (bounds) {
+                    bounds.extend(coords);
+                }
+                else {
+                    bounds = new mapboxgl.LngLatBounds(coords, coords);
+                }
             });
             //console.log('Points: ' + JSON.stringify(pts));
+            //console.log('Bounds: ' + JSON.stringify(bounds));
             this.setState({
+                bounds: bounds,
                 data: pts
             });
         }).catch(error => {

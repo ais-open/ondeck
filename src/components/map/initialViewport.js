@@ -9,7 +9,7 @@ export const SAN_FRANCISCO = {
 export const DAYTON = {
     latitude: 39.7589,
     longitude: -84.1916,
-    zoom: 3
+    zoom: 6
 };
 
 export const BOSTON = {
@@ -18,4 +18,4 @@ export const BOSTON = {
     zoom: 12
 };
 
-export default BOSTON;
+export default DAYTON;

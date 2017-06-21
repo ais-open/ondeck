@@ -6,7 +6,7 @@ APP_CONFIG = {
     // changes are introduced.
     version: 1.3,
     dataUrl: '/data/rodents.geojson',
-    baseMap: 'http://localhost:8080/styles/planet-darkbox.json',
+    baseMap: 'http://homebase-bowmanmc.c9users.io/styles/homebase-dark-ne.json',
     colorRange: 'Yellow2Red_3Classes',
     radius: 50,
     tileSize: 256,
@@ -15,7 +15,7 @@ APP_CONFIG = {
     elevation: 1,
     opacity: 0.8,
     bearing: 355, // left/right
-    pitch: 35,    // up/down
+    pitch: 89,    // up/down
     availableBaseMaps: [{
         name: 'Planet - Darkbox',
         url: 'http://localhost:8080/styles/planet-darkbox.json'
