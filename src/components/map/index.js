@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MapGL from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
-//import DeckGL, { GeoJsonLayer } from 'deck.gl';
-//import DeckGL, { HexagonLayer } from 'deck.gl';
 import Measure from 'react-measure';
 import 'whatwg-fetch';
 
@@ -33,9 +31,28 @@ class MapComponent extends React.Component {
 
         this.onChangeViewport = this.onChangeViewport.bind(this);
         this.onResize = this.onResize.bind(this);
+        this.fetchData = this.fetchData.bind(this);
     }
 
     componentDidMount() {
+        this.fetchData();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.configuration.dataUrl !== nextProps.configuration.dataUrl) {
+            this.fetchData();
+        }
+
+        let vp = Object.assign({}, this.state.viewport, {
+            bearing: nextProps.configuration.bearing,
+            pitch: nextProps.configuration.pitch
+        });
+        this.setState({
+            viewport: vp
+        });
+    }
+
+    fetchData() {
         const dataUrl = this.props.configuration.dataUrl;
         fetch(dataUrl).then(response => {
             return response.json();
@@ -64,16 +81,6 @@ class MapComponent extends React.Component {
         });
     }
 
-    componentWillReceiveProps(nextProps) {
-        let vp = Object.assign({}, this.state.viewport, {
-            bearing: nextProps.configuration.bearing,
-            pitch: nextProps.configuration.pitch
-        });
-        this.setState({
-            viewport: vp
-        });
-    }
-
     onChangeViewport(newViewport) {
         this.setState({
             viewport: newViewport
@@ -92,7 +99,7 @@ class MapComponent extends React.Component {
         const config = this.props.configuration;
         const mapStyles = new MapStyles();
 
-        const {data, viewport, width, height} = this.state;
+        const {data, viewport, bounds, width, height} = this.state;
         // GeoJSON layer
         // const layerOpts = Object.assign(mapStyles.getDataStyling(config), {data});
         // const layer = new GeoJsonLayer(layerOpts);
@@ -115,9 +122,9 @@ class MapComponent extends React.Component {
                         perspectiveEnabled={true}
                         mapboxApiAccessToken={MAPBOX_TOKEN}>
                         <ODHexagonLayer
+                            viewport={viewport}
                             width={width}
                             height={height}
-                            viewport={viewport}
                             colorRange={colorRange}
                             radius={config.radius}
                             data={data || []}
