@@ -18,4 +18,10 @@ export const BOSTON = {
     zoom: 12
 };
 
-export default DAYTON;
+export const NULL_ISLAND = {
+    latitude: 0.0,
+    longitude: 0.0,
+    zoom: 5
+};
+
+export default NULL_ISLAND;

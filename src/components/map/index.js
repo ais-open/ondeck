@@ -52,6 +52,15 @@ class MapComponent extends React.Component {
         });
     }
 
+    componentDidUpdate() {
+        // null out the center so the user can pan/zoom around on the map
+        if (this.state.center) {
+            this.setState({
+                center: null
+            });
+        }
+    }
+
     fetchData() {
         const dataUrl = this.props.configuration.dataUrl;
         fetch(dataUrl).then(response => {
@@ -72,8 +81,13 @@ class MapComponent extends React.Component {
             });
             //console.log('Points: ' + JSON.stringify(pts));
             //console.log('Bounds: ' + JSON.stringify(bounds));
+            // Calculate center of bounds by taking the average
+            const center = {
+                latitude: ((bounds._sw.lat + bounds._ne.lat) / 2),
+                longitude: ((bounds._ne.lng + bounds._sw.lng) / 2)
+            };
             this.setState({
-                bounds: bounds,
+                center: center,
                 data: pts
             });
         }).catch(error => {
@@ -99,12 +113,18 @@ class MapComponent extends React.Component {
         const config = this.props.configuration;
         const mapStyles = new MapStyles();
 
-        const {data, viewport, bounds, width, height} = this.state;
+        const {data, viewport, center, width, height} = this.state;
         // GeoJSON layer
         // const layerOpts = Object.assign(mapStyles.getDataStyling(config), {data});
         // const layer = new GeoJsonLayer(layerOpts);
         if (!data) {
             return null;
+        }
+
+        if (center) {
+            //console.log('Centering map at ' + JSON.stringify(center));
+            viewport.latitude = center.latitude;
+            viewport.longitude = center.longitude;
         }
 
         const mapStyling = mapStyles.getMapStyling(config);
