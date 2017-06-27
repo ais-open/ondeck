@@ -4,12 +4,14 @@ import MapGL from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
 import Measure from 'react-measure';
 import 'whatwg-fetch';
+import { ToastContainer, ToastMessage } from 'react-toastr'; 
 
 import initialViewport from './initialViewport';
 import MapStyles from './MapStyles';
 import ODHexagonLayer from './ODHexagonLayer';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYm93bWFubWMiLCJhIjoieE9WenlhayJ9.QFS8jQtCusMhwwVSMQIg9w';
+const ToastMessageFactory = React.createFactory(ToastMessage.animation);
 
 
 class MapComponent extends React.Component {
@@ -32,6 +34,7 @@ class MapComponent extends React.Component {
         this.onChangeViewport = this.onChangeViewport.bind(this);
         this.onResize = this.onResize.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.showToastr = this.showToastr.bind(this);
     }
 
     componentDidMount() {
@@ -59,6 +62,12 @@ class MapComponent extends React.Component {
                 center: null
             });
         }
+    }
+
+    showToastr(alertType, title, message) {
+        this.refs.container[alertType](message, title, {
+            closeButton: true,
+        });
     }
 
     fetchData() {
@@ -99,6 +108,7 @@ class MapComponent extends React.Component {
                 },
                 data: null
             });
+            this.showToastr('error', 'Data Error', `Error fetching data from "${dataUrl}"`);
         });
     }
 
@@ -167,12 +177,18 @@ class MapComponent extends React.Component {
                 </MapGL>
             );
         }
+
         return (
-            <Measure onMeasure={this.onResize}>
-                <div className="Map">
-                    {map}
-                </div>
-            </Measure>
+            <span>
+                <ToastContainer ref="container"
+                    toastMessageFactory={ToastMessageFactory}
+                    className="toast-top-right" />
+                <Measure onMeasure={this.onResize}>
+                    <div className="Map">
+                        {map}
+                    </div>
+                </Measure>
+            </span>
         );
     }
 }

@@ -40,6 +40,7 @@
   "author": "Applied Information Sciences",
   "license": "",
   "dependencies": {
+    "animate.css": "3.5.2",
     "colorbrewer": "1.0.0",
     "deck.gl": "4.0.6",
     "font-awesome": "4.7.0",
@@ -64,9 +65,11 @@
     "react-router": "3.0.0",
     "react-router-redux": "4.0.7",
     "react-shortcuts": "1.5.0",
+    "react-toastr": "2.8.2",
     "react-widgets": "^3.4.5",
     "redux": "3.6.0",
     "redux-thunk": "2.1.0",
+    "toastr": "2.1.2",
     "viewport-mercator-project": "4.0.2",
     "whatwg-fetch": "2.0.3"
   },
