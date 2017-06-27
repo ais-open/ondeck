@@ -79,7 +79,7 @@ class MapComponent extends React.Component {
                     bounds = new mapboxgl.LngLatBounds(coords, coords);
                 }
             });
-            //console.log('Points: ' + JSON.stringify(pts));
+            console.log('Points: ' + JSON.stringify(pts));
             //console.log('Bounds: ' + JSON.stringify(bounds));
             // Calculate center of bounds by taking the average
             const center = {
@@ -92,6 +92,13 @@ class MapComponent extends React.Component {
             });
         }).catch(error => {
             console.error('Error getting data from ' + dataUrl, error);
+            this.setState({
+                center: {
+                    latitude: 0,
+                    longitude: 0
+                },
+                data: null
+            });
         });
     }
 
@@ -117,9 +124,7 @@ class MapComponent extends React.Component {
         // GeoJSON layer
         // const layerOpts = Object.assign(mapStyles.getDataStyling(config), {data});
         // const layer = new GeoJsonLayer(layerOpts);
-        if (!data) {
-            return null;
-        }
+        //console.log('rendering map with state: ' + JSON.stringify(this.state));
 
         if (center) {
             //console.log('Centering map at ' + JSON.stringify(center));
@@ -130,26 +135,42 @@ class MapComponent extends React.Component {
         const mapStyling = mapStyles.getMapStyling(config);
         const colorRange = config.availableColorRanges[config.colorRange];
 
+
+        let map = (
+            <MapGL
+                {...viewport}
+                width={width}
+                height={height}
+                onChangeViewport={this.onChangeViewport}
+                mapStyle={mapStyling}
+                perspectiveEnabled={true}
+                mapboxApiAccessToken={MAPBOX_TOKEN} />
+        );
+        if (data) {
+            map = (
+                <MapGL
+                    {...viewport}
+                    width={width}
+                    height={height}
+                    onChangeViewport={this.onChangeViewport}
+                    mapStyle={mapStyling}
+                    perspectiveEnabled={true}
+                    mapboxApiAccessToken={MAPBOX_TOKEN}>
+                    <ODHexagonLayer
+                        viewport={viewport}
+                        width={width}
+                        height={height}
+                        colorRange={colorRange}
+                        radius={config.radius}
+                        data={data || []}
+                    />
+                </MapGL>
+            );
+        }
         return (
             <Measure onMeasure={this.onResize}>
                 <div className="Map">
-                    <MapGL
-                        {...viewport}
-                        width={width}
-                        height={height}
-                        onChangeViewport={this.onChangeViewport}
-                        mapStyle={mapStyling}
-                        perspectiveEnabled={true}
-                        mapboxApiAccessToken={MAPBOX_TOKEN}>
-                        <ODHexagonLayer
-                            viewport={viewport}
-                            width={width}
-                            height={height}
-                            colorRange={colorRange}
-                            radius={config.radius}
-                            data={data || []}
-                        />
-                    </MapGL>
+                    {map}
                 </div>
             </Measure>
         );
