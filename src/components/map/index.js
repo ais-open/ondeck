@@ -43,7 +43,8 @@ class MapComponent extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.configuration.dataUrl !== nextProps.configuration.dataUrl) {
-            this.fetchData();
+            //this.fetchData();
+            location.reload();
         }
 
         let vp = Object.assign({}, this.state.viewport, {
