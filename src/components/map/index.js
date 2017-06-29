@@ -43,8 +43,7 @@ class MapComponent extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.configuration.dataUrl !== nextProps.configuration.dataUrl) {
-            //this.fetchData();
-            location.reload();
+            this.fetchData(nextProps.configuration.dataUrl);
         }
 
         let vp = Object.assign({}, this.state.viewport, {
@@ -71,8 +70,8 @@ class MapComponent extends React.Component {
         });
     }
 
-    fetchData() {
-        const dataUrl = this.props.configuration.dataUrl;
+    fetchData(url) {
+        const dataUrl = url || this.props.configuration.dataUrl;
         fetch(dataUrl).then(response => {
             return response.json();
         }).then(data => {
@@ -89,7 +88,7 @@ class MapComponent extends React.Component {
                     bounds = new mapboxgl.LngLatBounds(coords, coords);
                 }
             });
-            console.log('Points: ' + JSON.stringify(pts));
+            //console.log('Points: ' + JSON.stringify(pts));
             //console.log('Bounds: ' + JSON.stringify(bounds));
             // Calculate center of bounds by taking the average
             const center = {
@@ -146,39 +145,6 @@ class MapComponent extends React.Component {
         const mapStyling = mapStyles.getMapStyling(config);
         const colorRange = config.availableColorRanges[config.colorRange];
 
-
-        let map = (
-            <MapGL
-                {...viewport}
-                width={width}
-                height={height}
-                onChangeViewport={this.onChangeViewport}
-                mapStyle={mapStyling}
-                perspectiveEnabled={true}
-                mapboxApiAccessToken={MAPBOX_TOKEN} />
-        );
-        if (data) {
-            map = (
-                <MapGL
-                    {...viewport}
-                    width={width}
-                    height={height}
-                    onChangeViewport={this.onChangeViewport}
-                    mapStyle={mapStyling}
-                    perspectiveEnabled={true}
-                    mapboxApiAccessToken={MAPBOX_TOKEN}>
-                    <ODHexagonLayer
-                        viewport={viewport}
-                        width={width}
-                        height={height}
-                        colorRange={colorRange}
-                        radius={config.radius}
-                        data={data || []}
-                    />
-                </MapGL>
-            );
-        }
-
         return (
             <span>
                 <ToastContainer ref="container"
@@ -186,7 +152,23 @@ class MapComponent extends React.Component {
                     className="toast-top-right" />
                 <Measure onMeasure={this.onResize}>
                     <div className="Map">
-                        {map}
+                        <MapGL
+                            {...viewport}
+                            width={width}
+                            height={height}
+                            onChangeViewport={this.onChangeViewport}
+                            mapStyle={mapStyling}
+                            perspectiveEnabled={true}
+                            mapboxApiAccessToken={MAPBOX_TOKEN}>
+                            <ODHexagonLayer
+                                viewport={viewport}
+                                width={width}
+                                height={height}
+                                colorRange={colorRange}
+                                radius={config.radius}
+                                data={data || []}
+                            />
+                        </MapGL>
                     </div>
                 </Measure>
             </span>
