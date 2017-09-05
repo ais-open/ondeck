@@ -49,10 +49,14 @@ class HomePage extends React.Component {
 
     updateConfiguration(newConfig) {
         //console.log('Updating configuration to ' + JSON.stringify(newConfig));
-        this.configurationManager.saveConfig(newConfig);
         this.setState({
             configuration: newConfig
         });
+    }
+    
+    saveConfiguration(newConfig) {
+        this.configurationManager.saveConfig(newConfig);
+        this.updateConfiguration(newConfig);
     }
 
     resetConfiguration() {
@@ -72,9 +76,10 @@ class HomePage extends React.Component {
                 <SettingsPane 
                     configuration={config}
                     isOpen={this.state.areSettingsOpen} 
+                    onChange={this.updateConfiguration}
                     onClose={this.setSettingsPaneVisibility} 
                     onReset={this.resetConfiguration} 
-                    onSave={this.updateConfiguration} />
+                    onSave={this.saveConfiguration} />
             </Shortcuts>
         );
     }

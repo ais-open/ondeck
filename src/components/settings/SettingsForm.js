@@ -39,6 +39,8 @@ class SettingsForm extends React.Component {
         //console.log(`Updating ${name} to ${val}`);
         this.setState({
             current: newConfig
+        }, () => {
+            this.props.onChange(newConfig);
         });
     }
 

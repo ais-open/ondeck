@@ -92,19 +92,15 @@ export default class ODHexagonLayer extends Component {
         const layers = [
             new HexagonLayer({
                 id: 'heatmap',
-                colorRange,
-                coverage,
+                //colorRange,
+                //coverage,
                 data,
-                elevationRange: [0, 300],
-                elevationScale: this.state.elevationScale,
+                //elevationRange: [0, 300],
+                //elevationScale: this.state.elevationScale,
                 extruded: true,
                 getPosition: d => d,
                 lightSettings: LIGHT_SETTINGS,
-                onHover: this.props.onHover,
-                opacity: 1,
-                pickable: Boolean(this.props.onHover),
-                radius,
-                upperPercentile
+                radius
             })
         ];
 
