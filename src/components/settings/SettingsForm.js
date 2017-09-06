@@ -125,6 +125,24 @@ class SettingsForm extends React.Component {
                         onChange={this.handleChange}
                         />
 
+                    <AisSlider name="lowerPercentile"
+                        label="Lower Percentile"
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={config.lowerPercentile}
+                        onChange={this.handleChange}
+                        />
+
+                    <AisSlider name="upperPercentile"
+                        label="Upper Percentile"
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={config.upperPercentile}
+                        onChange={this.handleChange}
+                        />
+
                     <div className="SettingsForm__actions">
                         <a onClick={this.props.onClose}>Cancel</a>
                         <a onClick={this.reset}>Reset</a>

@@ -10,6 +10,8 @@ APP_CONFIG = {
     colorRange: 'Yellow2Red_3Classes',
     radius: 50,
     coverage: 0.5,
+    lowerPercentile: 0,
+    upperPercentile: 100,
     tileSize: 256,
     geoColor: [249, 105, 13],
     lineWidth: 20,
