@@ -9,6 +9,7 @@ APP_CONFIG = {
     baseMap: 'http://homebase-bowmanmc.c9users.io/styles/homebase-dark-ne.json',
     colorRange: 'Yellow2Red_3Classes',
     radius: 50,
+    coverage: 0.5,
     tileSize: 256,
     geoColor: [249, 105, 13],
     lineWidth: 20,

@@ -93,7 +93,7 @@ export default class ODHexagonLayer extends Component {
             new HexagonLayer({
                 id: 'heatmap',
                 //colorRange,
-                //coverage,
+                coverage,
                 data,
                 //elevationRange: [0, 300],
                 //elevationScale: this.state.elevationScale,

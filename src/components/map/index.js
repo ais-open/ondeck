@@ -166,6 +166,7 @@ class MapComponent extends React.Component {
                                 height={height}
                                 colorRange={colorRange}
                                 radius={config.radius}
+                                coverage={config.coverage}
                                 data={data || []}
                             />
                         </MapGL>

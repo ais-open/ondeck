@@ -89,12 +89,6 @@ class SettingsForm extends React.Component {
                         onChange={this.handleChange}
                         />
 
-                    <AisNumberInput name="radius"
-                        label="Point Radius"
-                        value={config.radius}
-                        onChange={this.handleChange}
-                        />
-
                     <AisSlider name="bearing"
                         label="Bearing (left/right)"
                         min={0}
@@ -110,6 +104,24 @@ class SettingsForm extends React.Component {
                         max={89}
                         step={1}
                         value={config.pitch}
+                        onChange={this.handleChange}
+                        />
+
+                    <AisSlider name="radius"
+                        label="Radius (meters)"
+                        min={10}
+                        max={10000}
+                        step={10}
+                        value={config.radius}
+                        onChange={this.handleChange}
+                        />
+
+                    <AisSlider name="coverage"
+                        label="Coverage"
+                        min={0}
+                        max={1}
+                        step={0.1}
+                        value={config.coverage}
                         onChange={this.handleChange}
                         />
 
