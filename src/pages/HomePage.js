@@ -22,9 +22,10 @@ class HomePage extends React.Component {
             configuration: config
         };
 
+        this.saveConfiguration = this.saveConfiguration.bind(this);
         this.setSettingsPaneVisibility = this.setSettingsPaneVisibility.bind(this);
-        this.updateConfiguration = this.updateConfiguration.bind(this);
         this.resetConfiguration = this.resetConfiguration.bind(this);
+        this.updateConfiguration = this.updateConfiguration.bind(this);
     }
 
     getChildContext() {

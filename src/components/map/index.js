@@ -131,6 +131,7 @@ class MapComponent extends React.Component {
         const mapStyles = new MapStyles();
 
         const {data, viewport, center, width, height} = this.state;
+
         // GeoJSON layer
         // const layerOpts = Object.assign(mapStyles.getDataStyling(config), {data});
         // const layer = new GeoJsonLayer(layerOpts);

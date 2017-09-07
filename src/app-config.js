@@ -4,7 +4,7 @@ APP_CONFIG = {
     // version here is larger than what they have, it throws their local copy
     // away and keeps this one. Good for when new attributes or other breaking
     // changes are introduced.
-    version: 1.3,
+    version: 1.4,
     dataUrl: '/data/rodents.geojson',
     baseMap: 'http://homebase-bowmanmc.c9users.io/styles/homebase-dark-ne.json',
     colorRange: 'Yellow2Red_3Classes',
@@ -18,7 +18,7 @@ APP_CONFIG = {
     elevation: 1,
     opacity: 0.8,
     bearing: 355, // left/right
-    pitch: 89,    // up/down
+    pitch: 60,    // up/down
     availableBaseMaps: [{
         name: 'Planet - Darkbox',
         url: 'http://localhost:8080/styles/planet-darkbox.json'

@@ -101,7 +101,7 @@ class SettingsForm extends React.Component {
                     <AisSlider name="pitch"
                         label="Pitch (up/down)"
                         min={0}
-                        max={89}
+                        max={60}
                         step={1}
                         value={config.pitch}
                         onChange={this.handleChange}
