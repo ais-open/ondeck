@@ -19,6 +19,7 @@ class SettingsForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.save = this.save.bind(this);
         this.reset = this.reset.bind(this);
+        this.cancel = this.cancel.bind(this);
     }
 
     handleChange(evt) {
@@ -47,6 +48,11 @@ class SettingsForm extends React.Component {
     save(evt) {
         evt.preventDefault();
         this.props.onSave(this.state.current);
+        this.props.onClose();
+    }
+
+    cancel() {
+        this.props.onCancel();
         this.props.onClose();
     }
 
@@ -144,7 +150,7 @@ class SettingsForm extends React.Component {
                         />
 
                     <div className="SettingsForm__actions">
-                        <a onClick={this.props.onClose}>Cancel</a>
+                        <a onClick={this.cancel}>Cancel</a>
                         <a onClick={this.reset}>Reset</a>
                         <button onClick={this.save}>Save</button>
                     </div>
@@ -157,6 +163,7 @@ class SettingsForm extends React.Component {
 
 SettingsForm.propTypes = {
     config: PropTypes.object.isRequired,
+    onCancel: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     onReset: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired

@@ -22,6 +22,7 @@ class HomePage extends React.Component {
             configuration: config
         };
 
+        this.cancelConfigurationChange = this.cancelConfigurationChange.bind(this);
         this.saveConfiguration = this.saveConfiguration.bind(this);
         this.setSettingsPaneVisibility = this.setSettingsPaneVisibility.bind(this);
         this.resetConfiguration = this.resetConfiguration.bind(this);
@@ -54,7 +55,13 @@ class HomePage extends React.Component {
             configuration: newConfig
         });
     }
-    
+
+    cancelConfigurationChange() {
+        this.setState({
+            configuration: this.configurationManager.getConfig()
+        });
+    }
+
     saveConfiguration(newConfig) {
         this.configurationManager.saveConfig(newConfig);
         this.updateConfiguration(newConfig);
@@ -76,7 +83,8 @@ class HomePage extends React.Component {
                 <MapComponent configuration={config} />
                 <SettingsPane 
                     configuration={config}
-                    isOpen={this.state.areSettingsOpen} 
+                    isOpen={this.state.areSettingsOpen}
+                    onCancel={this.cancelConfigurationChange}
                     onChange={this.updateConfiguration}
                     onClose={this.setSettingsPaneVisibility} 
                     onReset={this.resetConfiguration} 
