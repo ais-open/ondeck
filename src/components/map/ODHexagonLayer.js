@@ -83,7 +83,7 @@ export default class ODHexagonLayer extends Component {
     }
 
     render() {
-        const { viewport, width, height, colorRange, data, radius, coverage, lowerPercentile, upperPercentile } = this.props;
+        const { viewport, width, height, colorRange, data, radius, coverage, lowerPercentile, upperPercentile, lowerElevation, upperElevation } = this.props;
 
         if (!data) {
             return null;
@@ -97,7 +97,7 @@ export default class ODHexagonLayer extends Component {
                 data,
                 lowerPercentile,
                 upperPercentile,
-                //elevationRange: [0, 300],
+                elevationRange: [lowerElevation, upperElevation],
                 //elevationScale: this.state.elevationScale,
                 extruded: true,
                 getPosition: d => d,

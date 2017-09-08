@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import AisDropdownList from '../form/AisDropdownList';
-import AisNumberInput from '../form/AisNumberInput';
 import AisSlider from '../form/AisSlider';
 import AisTextInput from '../form/AisTextInput';
 
@@ -149,6 +148,24 @@ class SettingsForm extends React.Component {
                         onChange={this.handleChange}
                         />
 
+                    <AisSlider name="lowerElevation"
+                        label="Lower Elevation"
+                        min={0}
+                        max={100000}
+                        step={1000}
+                        value={config.lowerElevation}
+                        onChange={this.handleChange}
+                        />
+
+                    <AisSlider name="upperElevation"
+                        label="Upper Elevation"
+                        min={0}
+                        max={100000}
+                        step={1000}
+                        value={config.upperElevation}
+                        onChange={this.handleChange}
+                        />
+
                     <div className="SettingsForm__actions">
                         <a onClick={this.cancel}>Cancel</a>
                         <a onClick={this.reset}>Reset</a>
@@ -170,31 +187,3 @@ SettingsForm.propTypes = {
 };
 
 export default SettingsForm;
-
-// GeoJSON Attributes
-/*
-<AisTextInput name="geoColor"
-    label="Data Color [R, G, B, A]"
-    value={JSON.stringify(config.geoColor)}
-    onChange={this.handleChange}
-    />
-
-<AisNumberInput name="pointRadius"
-    label="Point Radius"
-    value={config.pointRadius}
-    onChange={this.handleChange}
-    />
-
-<AisNumberInput name="lineWidth"
-    label="Line Width"
-    value={config.lineWidth}
-    onChange={this.handleChange}
-    />
-
-<AisNumberInput name="opacity"
-    label="Opacity (0 - 1)"
-    value={config.opacity}
-    step={0.1}
-    onChange={this.handleChange}
-    />
-    */

@@ -4,14 +4,16 @@ APP_CONFIG = {
     // version here is larger than what they have, it throws their local copy
     // away and keeps this one. Good for when new attributes or other breaking
     // changes are introduced.
-    version: 1.4,
+    version: 1.6,
     dataUrl: '/data/rodents.geojson',
     baseMap: 'http://homebase-bowmanmc.c9users.io/styles/homebase-dark-ne.json',
     colorRange: 'Yellow2Red_3Classes',
-    radius: 50,
-    coverage: 0.5,
+    radius: 1000,
+    coverage: 0.7,
     lowerPercentile: 0,
     upperPercentile: 100,
+    lowerElevation: 1000,
+    upperElevation: 20000,
     tileSize: 256,
     geoColor: [249, 105, 13],
     lineWidth: 20,

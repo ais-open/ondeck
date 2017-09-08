@@ -170,6 +170,8 @@ class MapComponent extends React.Component {
                                 coverage={config.coverage}
                                 lowerPercentile={config.lowerPercentile}
                                 upperPercentile={config.upperPercentile}
+                                lowerElevation={config.lowerElevation}
+                                upperElevation={config.upperElevation}
                                 data={data || []}
                             />
                         </MapGL>
