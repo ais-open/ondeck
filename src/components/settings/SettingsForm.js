@@ -62,6 +62,9 @@ class SettingsForm extends React.Component {
     }
 
     postToStateful() {
+        if (!APP_CONFIG.stateful) {
+            return;
+        }
         const config = this.state.current;
         const statefulUrl = `${APP_CONFIG.stateful}/states`;
         let params = {
@@ -91,6 +94,16 @@ class SettingsForm extends React.Component {
 
         const config = this.state.current;
         const colorRanges = Object.keys(APP_CONFIG.availableColorRanges);
+
+        let shareLink = null;
+        if (APP_CONFIG.stateful) {
+            shareLink = (
+                <div className="SettingsForm__share">
+                    <a onClick={this.postToStateful}>Generate Share Link</a>
+                </div>
+            );
+        }
+
 
         return (
             <div className="SettingsForm">
@@ -194,9 +207,7 @@ class SettingsForm extends React.Component {
                         <a onClick={this.reset}>Reset</a>
                         <button onClick={this.save}>Save</button>
                     </div>
-                    <div className="SettingsForm__share">
-                        <a onClick={this.postToStateful}>Generate Share Link</a>
-                    </div>
+                    { shareLink }
                 </form>
 
             </div>

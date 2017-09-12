@@ -34,7 +34,7 @@ class HomePage extends React.Component {
 
     checkStateful() {
         const stateId = QueryString.parse(location.search).state;
-        if (!stateId) {
+        if (!stateId || !APP_CONFIG.stateful) {
             return;
         }
 
