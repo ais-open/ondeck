@@ -81,13 +81,13 @@ class HomePage extends React.Component {
         return (
             <Shortcuts name="SETTINGS" handler={this.setSettingsPaneVisibility}>
                 <MapComponent configuration={config} />
-                <SettingsPane 
+                <SettingsPane
                     configuration={config}
                     isOpen={this.state.areSettingsOpen}
                     onCancel={this.cancelConfigurationChange}
                     onChange={this.updateConfiguration}
-                    onClose={this.setSettingsPaneVisibility} 
-                    onReset={this.resetConfiguration} 
+                    onClose={this.setSettingsPaneVisibility}
+                    onReset={this.resetConfiguration}
                     onSave={this.saveConfiguration} />
             </Shortcuts>
         );

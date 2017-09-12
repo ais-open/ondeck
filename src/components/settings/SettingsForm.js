@@ -16,6 +16,7 @@ class SettingsForm extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.postToStateful = this.postToStateful.bind(this);
         this.save = this.save.bind(this);
         this.reset = this.reset.bind(this);
         this.cancel = this.cancel.bind(this);
@@ -58,6 +59,28 @@ class SettingsForm extends React.Component {
     reset() {
         this.props.onReset();
         this.props.onClose();
+    }
+
+    postToStateful() {
+        const config = this.state.current;
+        const statefulUrl = `${APP_CONFIG.stateful}/states`;
+        let params = {
+            'app_name': 'ondeck',
+            'user_state': JSON.stringify(config)
+        };
+
+        fetch(statefulUrl, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(params)
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            const stateId = data.id;
+            window.history.pushState("", "OnDeck", `/?state=${stateId}`);
+        });
     }
 
     render() {
@@ -170,6 +193,9 @@ class SettingsForm extends React.Component {
                         <a onClick={this.cancel}>Cancel</a>
                         <a onClick={this.reset}>Reset</a>
                         <button onClick={this.save}>Save</button>
+                    </div>
+                    <div className="SettingsForm__share">
+                        <a onClick={this.postToStateful}>Generate Share Link</a>
                     </div>
                 </form>
 

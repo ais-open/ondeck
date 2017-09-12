@@ -7,6 +7,7 @@ APP_CONFIG = {
     version: 1.6,
     dataUrl: '/data/rodents.geojson',
     baseMap: 'http://homebase-bowmanmc.c9users.io/styles/homebase-dark-ne.json',
+    stateful: 'http://localhost:8080',
     colorRange: 'Yellow2Red_3Classes',
     radius: 1000,
     coverage: 0.7,
