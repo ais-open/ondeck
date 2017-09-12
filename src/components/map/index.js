@@ -4,7 +4,7 @@ import MapGL from 'react-map-gl';
 import mapboxgl from 'mapbox-gl';
 import Measure from 'react-measure';
 import 'whatwg-fetch';
-import { ToastContainer, ToastMessage } from 'react-toastr'; 
+import { ToastContainer, ToastMessage } from 'react-toastr';
 
 import initialViewport from './initialViewport';
 import MapStyles from './MapStyles';
@@ -118,10 +118,10 @@ class MapComponent extends React.Component {
         });
     }
 
-    onResize(dimensions) {
+    onResize(contentRect) {
         this.setState({
-            width: dimensions.width,
-            height: dimensions.height
+            width: contentRect.bounds.width,
+            height: contentRect.bounds.height
         });
     }
 
@@ -151,15 +151,16 @@ class MapComponent extends React.Component {
                 <ToastContainer ref="container"
                     toastMessageFactory={ToastMessageFactory}
                     className="toast-top-right" />
-                <Measure onMeasure={this.onResize}>
-                    <div className="Map">
+                <Measure bounds onResize={this.onResize}>
+                {({ measureRef }) =>
+                    <div className="Map" ref={measureRef}>
                         <MapGL
                             {...viewport}
                             width={width}
                             height={height}
-                            onChangeViewport={this.onChangeViewport}
+                            onViewportChange={this.onChangeViewport}
                             mapStyle={mapStyling}
-                            perspectiveEnabled={true}
+                            dragRotate={true}
                             mapboxApiAccessToken={MAPBOX_TOKEN}>
                             <ODHexagonLayer
                                 viewport={viewport}
@@ -176,6 +177,7 @@ class MapComponent extends React.Component {
                             />
                         </MapGL>
                     </div>
+                }
                 </Measure>
             </span>
         );
