@@ -59,12 +59,12 @@ export default {
         }),
 
         // Minify JS
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true
-        }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     sourceMap: true
+        // }),
 
         new webpack.LoaderOptionsPlugin({
-            minimize: true,
+            minimize: false,
             debug: false,
             noInfo: true, // set to false to see a list of every file being bundled.
             options: {
