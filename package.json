@@ -42,7 +42,7 @@
   "dependencies": {
     "animate.css": "3.5.2",
     "colorbrewer": "1.0.0",
-    "deck.gl": "4.1.2",
+    "deck.gl": "4.0.6",
     "font-awesome": "4.7.0",
     "golden-layout": "1.5.9",
     "http": "0.0.0",

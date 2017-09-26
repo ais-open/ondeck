@@ -4,10 +4,10 @@ APP_CONFIG = {
     // version here is larger than what they have, it throws their local copy
     // away and keeps this one. Good for when new attributes or other breaking
     // changes are introduced.
-    version: 1.6,
+    version: 1.7,
     dataUrl: '/data/rodents.geojson',
-    baseMap: 'http://homebase-bowmanmc.c9users.io/styles/homebase-dark-ne.json',
-    stateful: 'http://localhost:8080',
+    baseMap: 'http://localhost:8080/styles/ne-homebase-dark.json',
+    // stateful: 'http://localhost:8080',
     colorRange: 'Yellow2Red_3Classes',
     radius: 1000,
     coverage: 0.7,
@@ -23,15 +23,6 @@ APP_CONFIG = {
     bearing: 355, // left/right
     pitch: 60,    // up/down
     availableBaseMaps: [{
-        name: 'Planet - Darkbox',
-        url: 'http://localhost:8080/styles/planet-darkbox.json'
-    }, {
-        name: 'Planet - Dark Matter',
-        url: 'http://localhost:8080/styles/planet-dark-matter.json'
-    }, {
-        name: 'Planet - Positron',
-        url: 'http://localhost:8080/styles/planet-positron.json'
-    }, {
         name: 'Natural Earth - Homebase Dark',
         url: 'http://localhost:8080/styles/ne-homebase-dark.json'
     }],
