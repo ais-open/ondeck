@@ -1,0 +1,59 @@
+.settings {
+  .settings__open-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+  }
+  .settings__drawer {
+    padding: 10px 15px;
+    overflow-x: hidden;
+
+    .settings__actions {
+      display: flex;
+      justify-content: space-between;
+
+      h1 {
+        font-family: 'Century Gothic','Apple Gothic',AppleGothic,'URW Gothic L','Avant Garde',Futura,sans-serif;
+        margin: 0;
+      }
+
+      .settings__close-btn {
+        margin: 0 0 10px 0;
+      }
+    }
+    .settings__drawer-content {
+      label {
+        color: #777 !important;
+        font-size: 0.9em;
+      }
+      .settings__data-source {
+        display: flex;
+        align-items: baseline;
+
+        .settings__data-source-input {
+          width: 100% !important;
+        }
+      }
+      .settings__select {
+        margin-top: -10px;
+        width: 100% !important;
+      }
+      .settings__toggle {
+        margin: 4px 0;
+      }
+      .settings__slider {
+          margin: 10px 0;
+      }
+    }
+  }
+}
+
+.settings__help {
+  dt {
+    font-weight: bold;
+  }
+  dd {
+    margin: 0 0 15px 0;
+  }
+}
