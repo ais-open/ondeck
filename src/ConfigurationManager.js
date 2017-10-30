@@ -1,10 +1,8 @@
-import appConfig from './app-config.json';
-
 const KEY = 'ondeck.configuration';
 
 export default class ConfigurationManager {
-    constructor() {
-        this.defaultConfig = appConfig;
+    constructor(defaultConfig) {
+        this.defaultConfig = defaultConfig;
     }
 
     getConfig() {
@@ -19,7 +17,7 @@ export default class ConfigurationManager {
         }
 
         // Else, it's their first time or they have an outdated config...
-        // give them our defaults from app-config.js
+        // give them our defaults from app-config.json
         const conf = Object.assign({}, this.defaultConfig);
         this.saveConfig(conf);
         return conf;

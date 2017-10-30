@@ -11,8 +11,7 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        this.configurationManager = new ConfigurationManager();
-
+        this.configurationManager = new ConfigurationManager(JSON.parse(props.appConfig));
         const appConfig = this._initOverlaySettings();
 
         this.state = {

@@ -15,10 +15,21 @@ const muiTheme = getMuiTheme({
     }
 });
 
-ReactDOM.render(
-    <MuiThemeProvider muiTheme={muiTheme}>
-        <App />
-    </MuiThemeProvider>,
-    document.getElementById('root')
-);
-registerServiceWorker();
+const xhttp = new XMLHttpRequest();
+let appConfig = {};
+xhttp.onreadystatechange = () => {
+    if (xhttp.readyState === 4 && xhttp.status === 200) {
+       // Typical action to be performed when the document is ready:
+       appConfig = JSON.parse(xhttp.responseText);
+       ReactDOM.render(
+           <MuiThemeProvider muiTheme={muiTheme}>
+               <App appConfig={JSON.stringify(appConfig)}/>
+           </MuiThemeProvider>,
+           document.getElementById('root')
+       );
+       registerServiceWorker();
+    }
+};
+
+xhttp.open('GET', `${process.env.PUBLIC_URL}/app-config.json`, true);
+xhttp.send();
