@@ -230,7 +230,7 @@ export default class SettingsComponent extends Component {
                                     <NavigationChevronLeft/>
                                 </FloatingActionButton>
                             </div>
-                            <h1>On Deck</h1>
+                            <h1>OnDeck</h1>
                             <IconMenu iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
                                       anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                                       targetOrigin={{horizontal: 'right', vertical: 'top'}}
