@@ -6,8 +6,7 @@ import * as _ from 'lodash';
 import GeoJsonOverlay from './overlays/geojson';
 import './component.css';
 
-// const DATA_URL = 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart.geo.json';
-// const DATA_URL = 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/geojson/vancouver-blocks.json';
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiYm93bWFubWMiLCJhIjoieE9WenlhayJ9.QFS8jQtCusMhwwVSMQIg9w';
 const colorScale = r => [r * 255, 140, 200 * (1 - r)];
 
 export default class MapComponent extends Component {
@@ -120,7 +119,8 @@ export default class MapComponent extends Component {
                     {...viewport}
                     mapStyle={currentConfig.baseMap}
                     dragRotate={true}
-                    onViewportChange={this._onViewportChange.bind(this)}>
+                    onViewportChange={this._onViewportChange.bind(this)}
+                    mapboxApiAccessToken={MAPBOX_TOKEN}>
                     <GeoJsonOverlay viewport={viewport}
                                     data={data}
                                     colorScale={colorScale}
