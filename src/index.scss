@@ -5,3 +5,26 @@ body {
   padding: 0;
   font-family: 'Roboto';
 }
+
+.mapboxgl-map {
+  background: #000;
+
+  .mapboxgl-control-container {
+    .mapboxgl-ctrl-bottom-right {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.7em;
+      z-index: 1001;
+
+      a {
+        color: #888;
+        text-decoration: none;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
