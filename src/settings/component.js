@@ -43,6 +43,7 @@ export default class SettingsComponent extends Component {
         this._updateState = this._updateState.bind(this);
         this._handleDataSource = this._handleDataSource.bind(this);
         this._handleDataSourceUpdate = this._handleDataSourceUpdate.bind(this);
+        this._handleDataSourceKeyDown = this._handleDataSourceKeyDown.bind(this);
         this._handleOverlay = this._handleOverlay.bind(this);
         this._handleBaseMap = this._handleBaseMap.bind(this);
         this._handleTooltipProps = this._handleTooltipProps.bind(this);
@@ -109,6 +110,12 @@ export default class SettingsComponent extends Component {
         }, () => {
             this.props.onChange(newConfig);
         });
+    }
+
+    _handleDataSourceKeyDown(event) {
+        if (event.keyCode === 13) {
+            this._handleDataSourceUpdate();
+        }
     }
 
     _handleOverlay(event, index, value) {
@@ -248,7 +255,7 @@ export default class SettingsComponent extends Component {
                         <div className="settings__drawer-content">
                             <div className="settings__data-source">
                                 <TextField floatingLabelText="Data Source" value={this.state.dataUrl} onChange={this._handleDataSource}
-                                           className="settings__data-source-input"/>
+                                           className="settings__data-source-input" onKeyDown={this._handleDataSourceKeyDown}/>
                                 <IconButton onClick={this._handleDataSourceUpdate} tooltip="Refresh Data Source" tooltipPosition="top-left">
                                     <NavigationRefresh/>
                                 </IconButton>
