@@ -1,5 +1,5 @@
 {
-    "version": 2.1,
+    "version": 2.2,
     "dataUrl": "data/sample.geojson",
     "baseMap": "http://localhost:8080/styles/ne-homebase-dark.json",
     "stateful": "http://localhost:8080",
@@ -21,7 +21,7 @@
             "label": "GeoJson",
             "value": "geojson",
             "settings": {
-                "tooltipProps": "",
+                "tooltipProps": [],
                 "elevationProp": "",
                 "fillProp": "",
                 "lineProp": "",
@@ -48,6 +48,7 @@
             "label": "Hexagon",
             "value": "hexagon",
             "settings": {
+                "tooltipProps": [],
                 "opacity": 1.0,
                 "stroked": false,
                 "filled": true,

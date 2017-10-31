@@ -103,6 +103,7 @@ export default class SettingsComponent extends Component {
     _handleDataSourceUpdate() {
         let newConfig = Object.assign({}, this.state.currentConfig);
         newConfig.dataUrl = this.state.dataUrl;
+        newConfig.overlaySettings.tooltipProps = [];
         this.setState({
             currentConfig: newConfig
         }, () => {
