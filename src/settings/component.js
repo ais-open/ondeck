@@ -202,7 +202,9 @@ export default class SettingsComponent extends Component {
         _.forEach(baseMaps, baseMap => {
             baseMapOptions.push(<MenuItem value={baseMap.url} key={baseMap.url} primaryText={baseMap.name}/>);
         });
-        const featurePropOptions = [];
+        const featurePropOptions = [
+            <MenuItem value={null} key="none" primaryText=""/>
+        ];
         if (this.props.data.features && this.props.data.features.length > 0) {
             const featureProps = _.keys(this.props.data.features[0].properties);
             _.forEach(featureProps, prop => {
@@ -262,7 +264,7 @@ export default class SettingsComponent extends Component {
                             <SelectField floatingLabelText="Tooltip Properties" floatingLabelFixed={true} hintText="Select..."
                                          className="settings__select" value={this.state.currentConfig.overlaySettings.tooltipProps}
                                          onChange={this._handleTooltipProps} multiple={true}>
-                                {featurePropOptions}
+                                {_.drop(featurePropOptions)}
                             </SelectField>
                             <SelectField floatingLabelText="Elevation Property" floatingLabelFixed={true} hintText="Select..."
                                          className="settings__select" value={this.state.currentConfig.overlaySettings.elevationProp}
