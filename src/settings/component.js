@@ -186,6 +186,7 @@ export default class SettingsComponent extends Component {
     componentWillReceiveProps(nextProps) {
         if (!_.isEqual(this.props.config, nextProps.config)) {
             this.setState({
+                dataUrl: nextProps.config.dataUrl,
                 currentConfig: nextProps.config
             });
         }
@@ -247,7 +248,7 @@ export default class SettingsComponent extends Component {
                             <div className="settings__data-source">
                                 <TextField floatingLabelText="Data Source" value={this.state.dataUrl} onChange={this._handleDataSource}
                                            className="settings__data-source-input"/>
-                                <IconButton onClick={this._handleDataSourceUpdate}>
+                                <IconButton onClick={this._handleDataSourceUpdate} tooltip="Refresh Data Source" tooltipPosition="top-left">
                                     <NavigationRefresh/>
                                 </IconButton>
                             </div>
