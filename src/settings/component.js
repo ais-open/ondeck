@@ -11,7 +11,6 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import NavigationChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
-import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ActionHelp from 'material-ui/svg-icons/action/help';
 import ActionCached from 'material-ui/svg-icons/action/cached';
@@ -20,6 +19,7 @@ import Divider from 'material-ui/Divider';
 import Slider from 'material-ui/Slider';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import './component.css';
 
@@ -103,13 +103,16 @@ export default class SettingsComponent extends Component {
 
     _handleDataSourceUpdate() {
         let newConfig = Object.assign({}, this.state.currentConfig);
-        newConfig.dataUrl = this.state.dataUrl;
-        newConfig.overlaySettings.tooltipProps = [];
-        this.setState({
-            currentConfig: newConfig
-        }, () => {
-            this.props.onChange(newConfig);
-        });
+        if (newConfig.dataUrl !== this.state.dataUrl) {
+            newConfig.dataUrl = this.state.dataUrl;
+            newConfig.overlaySettings.tooltipProps = [];
+            newConfig.loadingData = true;
+            this.setState({
+                currentConfig: newConfig
+            }, () => {
+                this.props.onChange(newConfig);
+            });
+        }
     }
 
     _handleDataSourceKeyDown(event) {
@@ -227,6 +230,7 @@ export default class SettingsComponent extends Component {
         const helpActions = [
             <FlatButton label="Close" secondary={true} onClick={this._handleHelpClose}/>
         ];
+        const refreshStatus = this.state.currentConfig.loadingData ? 'loading' : 'ready';
 
         return (
             <div className="settings">
@@ -257,7 +261,7 @@ export default class SettingsComponent extends Component {
                                 <TextField floatingLabelText="Data Source" value={this.state.dataUrl} onChange={this._handleDataSource}
                                            className="settings__data-source-input" onKeyDown={this._handleDataSourceKeyDown}/>
                                 <IconButton onClick={this._handleDataSourceUpdate} tooltip="Refresh Data Source" tooltipPosition="top-left">
-                                    <NavigationRefresh/>
+                                    <RefreshIndicator size={30} left={10} top={0} percentage={80} color="#2196f3" status={refreshStatus}/>
                                 </IconButton>
                             </div>
                             <SelectField floatingLabelText="Base Map" floatingLabelFixed={true} hintText="Select..."

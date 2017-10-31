@@ -46,6 +46,9 @@ class App extends Component {
         this.setState({
             data: newData
         });
+        const newConfig = Object.assign({}, this.state.configuration);
+        newConfig.loadingData = false;
+        this._updateConfiguration(newConfig);
     }
 
     _updateConfiguration(newConfig) {
