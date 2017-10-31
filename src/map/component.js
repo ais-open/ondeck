@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import MapGL from 'react-map-gl';
 import 'whatwg-fetch';
 import * as _ from 'lodash';
+import mapboxgl from 'mapbox-gl';
+import * as bbox from 'geojson-bbox';
 
 import GeoJsonOverlay from './overlays/geojson';
 import './component.css';
@@ -46,6 +48,24 @@ export default class MapComponent extends Component {
         fetch(this.props.config.dataUrl).then(response => {
             return response.json();
         }).then(data => {
+            // center map on data
+            let bounds = new mapboxgl.LngLatBounds();
+            _.forEach(data.features, feature => {
+                if (feature.geometry.type === 'Point') {
+                    // use point lng/lat
+                    bounds.extend(feature.geometry.coordinates);
+                } else {
+                    // determine extent of polygon, linestring, etc.
+                    const extent = bbox(feature);
+                    bounds.extend([[extent[0], extent[1]], [extent[2], extent[3]]]);
+                }
+            });
+            // update viewport
+            this._onViewportChange({
+                longitude: bounds.getCenter().lng,
+                latitude: bounds.getCenter().lat
+            });
+            // update data
             this.setState({
                 data: data
             }, () => {

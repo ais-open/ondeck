@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "deck.gl": "^4.1.2",
+    "geojson-bbox": "0.0.0",
     "lodash": "^4.17.4",
     "luma.gl": "^4.0.3",
     "material-ui": "^0.19.4",
