@@ -3,7 +3,6 @@ import MapGL from 'react-map-gl';
 import 'whatwg-fetch';
 import * as _ from 'lodash';
 import mapboxgl from 'mapbox-gl';
-import * as bbox from 'geojson-bbox';
 
 import GeoJsonOverlay from './overlays/geojson';
 import './component.css';
@@ -44,37 +43,73 @@ export default class MapComponent extends Component {
         }
     }
 
+    _findCenter() { // this runs as a web worker
+        this.onmessage = (e) => {
+            // determine base url and import necessary scripts
+            if (!location.origin) { // eslint-disable-line
+                location.origin = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port: ''); // eslint-disable-line
+            }
+            const scriptBaseUrl = e.data.url ? `${location.origin}/${e.data.url}` : location.origin; // eslint-disable-line
+            importScripts(`${scriptBaseUrl}/scripts/geojson-bbox.min.js`); // eslint-disable-line
+
+            // collect bounds of map features
+            let bounds = [];
+            e.data.features.forEach(feature => {
+                if (feature.geometry.type === 'Point') {
+                    // use point lng/lat
+                    bounds.push(feature.geometry.coordinates);
+                } else {
+                    // determine extent of polygon, linestring, etc.
+                    const extent = bbox(feature); // eslint-disable-line
+                    bounds.push([extent[0], extent[1]], [extent[2], extent[3]]);
+                }
+            });
+            // post message back to main script
+            this.postMessage(bounds);
+        }
+    }
+
     _fetchData() {
         fetch(this.props.config.dataUrl).then(response => {
             return response.json();
         }).then(data => {
-            // center map on data
-            let bounds = new mapboxgl.LngLatBounds();
-            _.forEach(data.features, feature => {
-                if (feature.geometry.type === 'Point') {
-                    // use point lng/lat
-                    bounds.extend(feature.geometry.coordinates);
-                } else {
-                    // determine extent of polygon, linestring, etc.
-                    const extent = bbox(feature);
-                    bounds.extend([[extent[0], extent[1]], [extent[2], extent[3]]]);
-                }
-            });
-            // update viewport
-            this._onViewportChange({
-                longitude: bounds.getCenter().lng,
-                latitude: bounds.getCenter().lat
-            });
-            // update data
-            this.setState({
-                data: data
-            }, () => {
-                this.props.onDataChange(data);
+            // init web worker
+            let code = this._findCenter.toString();
+            code = code.substring(code.indexOf('{')+1, code.lastIndexOf('}'));
+
+            const blob = new Blob([code], {type: 'application/javascript'});
+            const worker = new Worker(URL.createObjectURL(blob));
+
+            // handle web worker response
+            worker.onmessage = (msg) => {
+                const bounds = new mapboxgl.LngLatBounds(msg.data);
+
+                // update viewport
+                this._onViewportChange({
+                    longitude: bounds.getCenter().lng,
+                    latitude: bounds.getCenter().lat
+                });
+
+                // update data
+                this.setState({
+                    data: data
+                }, () => {
+                    this.props.onDataChange(data);
+                });
+            };
+
+            // start web worker
+            worker.postMessage({
+                url: process.env.PUBLIC_URL,
+                features: data.features
             });
         }).catch(error => {
             console.error('Error getting data from ' + this.props.config.dataUrl, error);
+            // update data
             this.setState({
                 data: null
+            }, () => {
+                this.props.onDataChange({});
             });
             this.props.onSnackbarOpen(`Error fetching data from ${this.props.config.dataUrl}`, 'error');
         });

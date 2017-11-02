@@ -260,8 +260,9 @@ export default class SettingsComponent extends Component {
                             <div className="settings__data-source">
                                 <TextField floatingLabelText="Data Source" value={this.state.dataUrl} onChange={this._handleDataSource}
                                            className="settings__data-source-input" onKeyDown={this._handleDataSourceKeyDown}/>
-                                <IconButton onClick={this._handleDataSourceUpdate} tooltip="Refresh Data Source" tooltipPosition="top-left">
-                                    <RefreshIndicator size={30} left={10} top={0} percentage={80} color="#2196f3" status={refreshStatus}/>
+                                <IconButton onClick={this._handleDataSourceUpdate} tooltip="Refresh Data Source" tooltipPosition="top-left"
+                                            className="settings__data-source-refresh">
+                                    <RefreshIndicator size={30} left={8} top={8} percentage={80} color="#2196f3" status={refreshStatus}/>
                                 </IconButton>
                             </div>
                             <SelectField floatingLabelText="Base Map" floatingLabelFixed={true} hintText="Select..."

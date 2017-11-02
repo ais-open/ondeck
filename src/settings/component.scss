@@ -30,9 +30,15 @@
       .settings__data-source {
         display: flex;
         align-items: baseline;
+        position: relative;
 
         .settings__data-source-input {
           width: 100% !important;
+        }
+        .settings__data-source-refresh {
+          position: absolute;
+          top: -7px;
+          left: 5px;
         }
       }
       .settings__select {
