@@ -12,7 +12,7 @@ export default class LayersComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const {viewport, data, colorScale, onHover, layer, settings} = nextProps;
+        const {data, colorScale, onHover, layer, settings} = nextProps;
 
         if (!_.isEqual(this.props.data, data) || this.props.layer !== layer || !_.isEqual(this.props.settings, settings)) {
             let layerObj = null;

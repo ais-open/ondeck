@@ -82,7 +82,6 @@ export default class MapComponent extends Component {
 
             // handle web worker response
             worker.onmessage = (msg) => {
-                console.log(msg.data);
                 const bounds = new mapboxgl.LngLatBounds(msg.data);
 
                 // update viewport

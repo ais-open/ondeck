@@ -46,7 +46,7 @@ class App extends Component {
         this.setState({
             data: newData
         });
-        const newConfig = Object.assign({}, this.state.configuration);
+        const newConfig = _.cloneDeep(this.state.configuration);
         newConfig.loadingData = false;
         this._updateConfiguration(newConfig);
     }
@@ -58,12 +58,13 @@ class App extends Component {
     }
 
     _updateViewport(viewport) {
-        const newConfig = Object.assign({}, this.state.configuration);
+        const newConfig = _.cloneDeep(this.state.configuration);
         newConfig.viewport = viewport;
         this._updateConfiguration(newConfig);
     }
 
     _saveConfiguration(newConfig) {
+        console.log(newConfig);
         this.configurationManager.saveConfig(newConfig);
         this._updateConfiguration(newConfig);
         this._handleSnackbarOpen('Settings Saved', 'success');

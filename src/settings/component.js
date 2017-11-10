@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import * as _ from 'lodash';
 
 import SelectField from 'material-ui/SelectField';
-import Toggle from 'material-ui/Toggle';
 import Drawer from 'material-ui/Drawer';
-import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import IconMenu from 'material-ui/IconMenu';
@@ -16,12 +14,11 @@ import ActionHelp from 'material-ui/svg-icons/action/help';
 import ActionCached from 'material-ui/svg-icons/action/cached';
 import ContentSave from 'material-ui/svg-icons/content/save';
 import Divider from 'material-ui/Divider';
-import Slider from 'material-ui/Slider';
-import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import './component.css';
+import GeoJsonSettings from './geojson.settings.component';
 
 export default class SettingsComponent extends Component {
     constructor(props) {
@@ -46,19 +43,6 @@ export default class SettingsComponent extends Component {
         this._handleDataSourceKeyDown = this._handleDataSourceKeyDown.bind(this);
         this._handleLayer = this._handleLayer.bind(this);
         this._handleBaseMap = this._handleBaseMap.bind(this);
-        this._handleTooltipProps = this._handleTooltipProps.bind(this);
-        this._handleElevationProp = this._handleElevationProp.bind(this);
-        this._handleFillProp = this._handleFillProp.bind(this);
-        this._handleLineProp = this._handleLineProp.bind(this);
-        this._handleFilled = this._handleFilled.bind(this);
-        this._handleStroked = this._handleStroked.bind(this);
-        this._handleExtruded = this._handleExtruded.bind(this);
-        this._handleWireframe = this._handleWireframe.bind(this);
-        this._handleFP64 = this._handleFP64.bind(this);
-        this._handleOpacity = this._handleOpacity.bind(this);
-        this._handleMinPointRadius = this._handleMinPointRadius.bind(this);
-        this._handlePointRadiusScale = this._handlePointRadiusScale.bind(this);
-        this._handleMinLineWidth = this._handleMinLineWidth.bind(this);
     }
 
     _handleDrawerOpen() {
@@ -142,58 +126,6 @@ export default class SettingsComponent extends Component {
         });
     }
 
-    _handleTooltipProps(event, index, value) {
-        this._updateState('tooltipProps', value);
-    }
-
-    _handleElevationProp(event, index, value) {
-        this._updateState('elevationProp', value);
-    }
-
-    _handleFillProp(event, index, value) {
-        this._updateState('fillProp', value);
-    }
-
-    _handleLineProp(event, index, value) {
-        this._updateState('lineProp', value);
-    }
-
-    _handleFilled(event, isInputChecked) {
-        this._updateState('filled', isInputChecked);
-    }
-
-    _handleStroked(event, isInputChecked) {
-        this._updateState('stroked', isInputChecked);
-    }
-
-    _handleExtruded(event, isInputChecked) {
-        this._updateState('extruded', isInputChecked);
-    }
-
-    _handleWireframe(event, isInputChecked) {
-        this._updateState('wireframe', isInputChecked);
-    }
-
-    _handleFP64(event, isInputChecked) {
-        this._updateState('fp64', isInputChecked);
-    }
-
-    _handleOpacity(event, value) {
-        this._updateState('opacity', value);
-    }
-
-    _handleMinPointRadius(event, value) {
-        this._updateState('pointRadiusMinPixels', value);
-    }
-
-    _handlePointRadiusScale(event, value) {
-        this._updateState('pointRadiusScale', value);
-    }
-
-    _handleMinLineWidth(event, value) {
-        this._updateState('lineWidthMinPixels', value);
-    }
-
     componentWillReceiveProps(nextProps) {
         if (!_.isEqual(this.props.config, nextProps.config)) {
             this.setState({
@@ -214,23 +146,20 @@ export default class SettingsComponent extends Component {
         _.forEach(baseMaps, baseMap => {
             baseMapOptions.push(<MenuItem value={baseMap.url} key={baseMap.url} primaryText={baseMap.name}/>);
         });
-        const featurePropOptions = [
-            <MenuItem value={null} key="none" primaryText=""/>
-        ];
-        if (this.props.data.features && this.props.data.features.length > 0) {
-            const featureProps = _.keys(this.props.data.features[0].properties);
-            _.forEach(featureProps, prop => {
-                featurePropOptions.push(<MenuItem value={prop} key={prop} primaryText={prop}/>);
-            });
-        }
-        const sliderStyle = {
-            marginTop: 0,
-            marginBottom: 0
-        };
-        const helpActions = [
-            <FlatButton label="Close" secondary={true} onClick={this._handleHelpClose}/>
-        ];
         const refreshStatus = this.state.currentConfig.loadingData ? 'loading' : 'ready';
+
+        let settingsComponent = null;
+        switch(this.state.currentConfig.layer) {
+            case 'geojson':
+                settingsComponent = <GeoJsonSettings config={this.props.config} data={this.props.data} showHelp={this.state.showHelp}
+                                                     onCloseHelp={this._handleHelpClose} onChange={this._updateState}/>;
+                break;
+            case 'hexagon':
+                settingsComponent = null;
+                break;
+            default:
+                break;
+        }
 
         return (
             <div className="settings">
@@ -275,96 +204,10 @@ export default class SettingsComponent extends Component {
                                          onChange={this._handleLayer}>
                                 {layerOptions}
                             </SelectField>
-                            <SelectField floatingLabelText="Tooltip Properties" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.layerSettings.tooltipProps}
-                                         onChange={this._handleTooltipProps} multiple={true}>
-                                {_.drop(featurePropOptions)}
-                            </SelectField>
-                            <SelectField floatingLabelText="Elevation Property" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.layerSettings.elevationProp}
-                                         onChange={this._handleElevationProp}>
-                                {featurePropOptions}
-                            </SelectField>
-                            <SelectField floatingLabelText="Fill Color Property" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.layerSettings.fillProp}
-                                         onChange={this._handleFillProp}>
-                                {featurePropOptions}
-                            </SelectField>
-                            <SelectField floatingLabelText="Line Color Property" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.layerSettings.lineProp}
-                                         onChange={this._handleLineProp}>
-                                {featurePropOptions}
-                            </SelectField>
-                            <Toggle className="settings__toggle" label="Filled" toggled={this.state.currentConfig.layerSettings.filled}
-                                    onToggle={this._handleFilled}/>
-                            <Toggle className="settings__toggle" label="Stroked" toggled={this.state.currentConfig.layerSettings.stroked}
-                                    onToggle={this._handleStroked}/>
-                            <Toggle className="settings__toggle" label="Extruded" toggled={this.state.currentConfig.layerSettings.extruded}
-                                    onToggle={this._handleExtruded}/>
-                            <Toggle className="settings__toggle" label="Wireframe" toggled={this.state.currentConfig.layerSettings.wireframe}
-                                    onToggle={this._handleWireframe}/>
-                            <Toggle className="settings__toggle" label="FP64" toggled={this.state.currentConfig.layerSettings.fp64}
-                                    onToggle={this._handleFP64}/>
-                            <div className="settings__slider">
-                                <label>Opacity</label>
-                                <Slider min={0} max={1} step={0.01} sliderStyle={sliderStyle}
-                                        value={this.state.currentConfig.layerSettings.opacity} onChange={this._handleOpacity}/>
-                            </div>
-                            <div className="settings__slider">
-                                <label>Min Point Radius</label>
-                                <Slider min={1} max={20} step={1} sliderStyle={sliderStyle}
-                                        value={this.state.currentConfig.layerSettings.pointRadiusMinPixels}
-                                        onChange={this._handleMinPointRadius}/>
-                            </div>
-                            <div className="settings__slider">
-                                <label>Point Radius Scale</label>
-                                <Slider min={0} max={1000} step={1} sliderStyle={sliderStyle}
-                                        value={this.state.currentConfig.layerSettings.pointRadiusScale}
-                                        onChange={this._handlePointRadiusScale}/>
-                            </div>
-                            <div className="settings__slider">
-                                <label>Min Line Width</label>
-                                <Slider min={1} max={20} step={1} sliderStyle={sliderStyle}
-                                        value={this.state.currentConfig.layerSettings.lineWidthMinPixels}
-                                        onChange={this._handleMinLineWidth}/>
-                            </div>
+                            {settingsComponent}
                         </div>
                     </div>
                 </Drawer>
-                <Dialog title={this.state.currentConfig.layers[this.state.currentConfig.layer].label + ' Settings'}
-                        modal={false} open={this.state.showHelp} onRequestClose={this._handleHelpClose} actions={helpActions}
-                        autoScrollBodyContent={true} className="settings__help">
-                    <dl>
-                        <dt>Tooltip Properties</dt>
-                        <dd>The properties (in addition to longitude and latitude) that will show in the tooltip when hovering over a
-                            feature.</dd>
-                        <dt>Elevation Property</dt>
-                        <dd>The property that controls the elevation of a polygon feature (when extruded is true).</dd>
-                        <dt>Fill Color Property</dt>
-                        <dd>The property that controls the solid color of polygon and point features.</dd>
-                        <dt>Line Color Property</dt>
-                        <dd>The property that controls the color of a line and/or the outline of polygon.</dd>
-                        <dt>Filled</dt>
-                        <dd>Whether to draw filled polygons (solid fill). Note that for each polygon, only the area between the outer
-                            polygon and any holes will be filled. This setting is effective only when the polygon is NOT extruded.</dd>
-                        <dt>Stroked</dt>
-                        <dd>Whether to draw an outline around polygons (solid fill). Note that for complex polygons, both the outer
-                            polygon as well the outlines of any holes will be drawn.</dd>
-                        <dt>Extruded</dt>
-                        <dd>Extrude Polygon and MultiPolygon features along the z-axis if set to true.</dd>
-                        <dt>Wireframe</dt>
-                        <dd>Whether to generate a line wireframe of the hexagon. The outline will have "horizontal" lines closing the top
-                            and bottom polygons and a vertical line (a "strut") for each vertex on the polygon.</dd>
-                        <dt>FP64</dt>
-                        <dd>Whether the layer should be rendered in high-precision 64-bit mode</dd>
-                        <dt>Minimum Point Radius</dt>
-                        <dd>The minimum radius in pixels.</dd>
-                        <dt>Point Radius Scale</dt>
-                        <dd>A global radius multiplier for all points.</dd>
-                        <dt>Minimum Line Width</dt>
-                        <dd>The minimum line width in pixels.</dd>
-                    </dl>
-                </Dialog>
             </div>
         );
     }
