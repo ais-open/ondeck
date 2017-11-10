@@ -57,7 +57,7 @@ export default class MapComponent extends Component {
             e.data.features.forEach(feature => {
                 if (feature.geometry.type === 'Point') {
                     // use point lng/lat
-                    bounds.push(feature.geometry.coordinates);
+                    bounds.push([feature.geometry.coordinates[0], feature.geometry.coordinates[1]]);
                 } else {
                     // determine extent of polygon, linestring, etc.
                     const extent = bbox(feature); // eslint-disable-line
@@ -82,6 +82,7 @@ export default class MapComponent extends Component {
 
             // handle web worker response
             worker.onmessage = (msg) => {
+                console.log(msg.data);
                 const bounds = new mapboxgl.LngLatBounds(msg.data);
 
                 // update viewport

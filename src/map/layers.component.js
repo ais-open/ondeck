@@ -16,10 +16,15 @@ export default class LayersComponent extends Component {
 
         if (!_.isEqual(this.props.data, data) || this.props.layer !== layer || !_.isEqual(this.props.settings, settings)) {
             let layerObj = null;
-
+            // update layerId when changing elevation due to a deck.gl bug where the getElevation updateTrigger is ignored
+            // https://github.com/uber/deck.gl/issues/1065
+            let layerId = 'geojson';
+            if (this.props.settings.elevationProp !== settings.elevationProp) {
+                layerId = settings.elevationProp ? `geojson${settings.elevationProp}` : 'geojson';
+            }
             if (layer === 'geojson') {
                 layerObj = new GeoJsonLayer({
-                    id: `geojson`,
+                    id: layerId,
                     data: data,
                     opacity: settings.opacity,
                     stroked: settings.stroked,
