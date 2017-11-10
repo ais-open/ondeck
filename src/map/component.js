@@ -4,7 +4,7 @@ import 'whatwg-fetch';
 import * as _ from 'lodash';
 import mapboxgl from 'mapbox-gl';
 
-import GeoJsonOverlay from './overlays/geojson';
+import LayersComponent from './layers.component';
 import './component.css';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYm93bWFubWMiLCJhIjoieE9WenlhayJ9.QFS8jQtCusMhwwVSMQIg9w';
@@ -144,7 +144,7 @@ export default class MapComponent extends Component {
                 <div key="lng">Lng: {lngLat[0].toFixed(3)}</div>,
                 <div key="lat">Lat: {lngLat[1].toFixed(3)}</div>
             );
-            _.forEach(this.state.currentConfig.overlaySettings.tooltipProps, (prop, idx) => {
+            _.forEach(this.state.currentConfig.layerSettings.tooltipProps, (prop, idx) => {
                 tooltipContent.push(<div key={idx}>{prop}: {hoveredFeature.properties[prop]}</div>);
             });
             return (
@@ -176,23 +176,8 @@ export default class MapComponent extends Component {
                     dragRotate={true}
                     onViewportChange={this._onViewportChange.bind(this)}
                     mapboxApiAccessToken={MAPBOX_TOKEN}>
-                    <GeoJsonOverlay viewport={viewport}
-                                    data={data}
-                                    colorScale={colorScale}
-                                    elevationProp={currentConfig.overlaySettings.elevationProp}
-                                    fillProp={currentConfig.overlaySettings.fillProp}
-                                    lineProp={currentConfig.overlaySettings.lineProp}
-                                    opacity={currentConfig.overlaySettings.opacity}
-                                    stroked={currentConfig.overlaySettings.stroked}
-                                    filled={currentConfig.overlaySettings.filled}
-                                    extruded={currentConfig.overlaySettings.extruded}
-                                    wireframe={currentConfig.overlaySettings.wireframe}
-                                    fp64={currentConfig.overlaySettings.fp64}
-                                    pointRadiusMinPixels={currentConfig.overlaySettings.pointRadiusMinPixels}
-                                    pointRadiusScale={currentConfig.overlaySettings.pointRadiusScale}
-                                    lineWidthMinPixels={currentConfig.overlaySettings.lineWidthMinPixels}
-                                    lightSettings={currentConfig.overlaySettings.lightSettings}
-                                    onHover={this._onHover.bind(this)}/>
+                    <LayersComponent viewport={viewport} data={data} colorScale={colorScale} onHover={this._onHover.bind(this)}
+                                     layer={currentConfig.layer} settings={currentConfig.layerSettings}/>
                 </MapGL>
                 {this._renderTooltip()}
             </div>

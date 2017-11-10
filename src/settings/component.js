@@ -44,7 +44,7 @@ export default class SettingsComponent extends Component {
         this._handleDataSource = this._handleDataSource.bind(this);
         this._handleDataSourceUpdate = this._handleDataSourceUpdate.bind(this);
         this._handleDataSourceKeyDown = this._handleDataSourceKeyDown.bind(this);
-        this._handleOverlay = this._handleOverlay.bind(this);
+        this._handleLayer = this._handleLayer.bind(this);
         this._handleBaseMap = this._handleBaseMap.bind(this);
         this._handleTooltipProps = this._handleTooltipProps.bind(this);
         this._handleElevationProp = this._handleElevationProp.bind(this);
@@ -86,8 +86,8 @@ export default class SettingsComponent extends Component {
     }
 
     _updateState(obj, newValue) {
-        let newConfig = Object.assign({}, this.state.currentConfig);
-        newConfig.overlaySettings[obj] = newValue;
+        let newConfig = _.cloneDeep(this.state.currentConfig);
+        newConfig.layerSettings[obj] = newValue;
         this.setState({
             currentConfig: newConfig
         }, () => {
@@ -102,10 +102,10 @@ export default class SettingsComponent extends Component {
     }
 
     _handleDataSourceUpdate() {
-        let newConfig = Object.assign({}, this.state.currentConfig);
+        let newConfig = _.cloneDeep(this.state.currentConfig);
         if (newConfig.dataUrl !== this.state.dataUrl) {
             newConfig.dataUrl = this.state.dataUrl;
-            newConfig.overlaySettings.tooltipProps = [];
+            newConfig.layerSettings.tooltipProps = [];
             newConfig.loadingData = true;
             this.setState({
                 currentConfig: newConfig
@@ -121,10 +121,10 @@ export default class SettingsComponent extends Component {
         }
     }
 
-    _handleOverlay(event, index, value) {
-        let newConfig = Object.assign({}, this.state.currentConfig);
-        newConfig.overlay = value;
-        newConfig.overlaySettings = _.clone(newConfig.overlays[value].settings);
+    _handleLayer(event, index, value) {
+        let newConfig = _.cloneDeep(this.state.currentConfig);
+        newConfig.layer = value;
+        newConfig.layerSettings = _.clone(newConfig.layers[value].settings);
         this.setState({
             currentConfig: newConfig
         }, () => {
@@ -133,7 +133,7 @@ export default class SettingsComponent extends Component {
     }
 
     _handleBaseMap(event, index, value) {
-        let newConfig = Object.assign({}, this.state.currentConfig);
+        let newConfig = _.cloneDeep(this.state.currentConfig);
         newConfig.baseMap = value;
         this.setState({
             currentConfig: newConfig
@@ -204,10 +204,10 @@ export default class SettingsComponent extends Component {
     }
 
     render() {
-        const overlays = _.values(this.props.config.overlays);
-        const overlayOptions = [];
-        _.forEach(overlays, overlay => {
-            overlayOptions.push(<MenuItem value={overlay.value} key={overlay.value} primaryText={overlay.label}/>);
+        const layers = _.values(this.props.config.layers);
+        const layerOptions = [];
+        _.forEach(layers, layer => {
+            layerOptions.push(<MenuItem value={layer.value} key={layer.value} primaryText={layer.label}/>);
         });
         const baseMaps = _.values(this.props.config.baseMaps);
         const baseMapOptions = [];
@@ -270,68 +270,68 @@ export default class SettingsComponent extends Component {
                                          onChange={this._handleBaseMap}>
                                 {baseMapOptions}
                             </SelectField>
-                            {/*<SelectField floatingLabelText="Overlay" floatingLabelFixed={true} hintText="Select..."*/}
-                                         {/*className="settings__select" value={this.state.currentConfig.overlay}*/}
-                                         {/*onChange={this._handleOverlay}>*/}
-                                {/*{overlayOptions}*/}
-                            {/*</SelectField>*/}
+                            <SelectField floatingLabelText="Layer" floatingLabelFixed={true} hintText="Select..."
+                                         className="settings__select" value={this.state.currentConfig.layer}
+                                         onChange={this._handleLayer}>
+                                {layerOptions}
+                            </SelectField>
                             <SelectField floatingLabelText="Tooltip Properties" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.overlaySettings.tooltipProps}
+                                         className="settings__select" value={this.state.currentConfig.layerSettings.tooltipProps}
                                          onChange={this._handleTooltipProps} multiple={true}>
                                 {_.drop(featurePropOptions)}
                             </SelectField>
                             <SelectField floatingLabelText="Elevation Property" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.overlaySettings.elevationProp}
+                                         className="settings__select" value={this.state.currentConfig.layerSettings.elevationProp}
                                          onChange={this._handleElevationProp}>
                                 {featurePropOptions}
                             </SelectField>
                             <SelectField floatingLabelText="Fill Color Property" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.overlaySettings.fillProp}
+                                         className="settings__select" value={this.state.currentConfig.layerSettings.fillProp}
                                          onChange={this._handleFillProp}>
                                 {featurePropOptions}
                             </SelectField>
                             <SelectField floatingLabelText="Line Color Property" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.overlaySettings.lineProp}
+                                         className="settings__select" value={this.state.currentConfig.layerSettings.lineProp}
                                          onChange={this._handleLineProp}>
                                 {featurePropOptions}
                             </SelectField>
-                            <Toggle className="settings__toggle" label="Filled" toggled={this.state.currentConfig.overlaySettings.filled}
+                            <Toggle className="settings__toggle" label="Filled" toggled={this.state.currentConfig.layerSettings.filled}
                                     onToggle={this._handleFilled}/>
-                            <Toggle className="settings__toggle" label="Stroked" toggled={this.state.currentConfig.overlaySettings.stroked}
+                            <Toggle className="settings__toggle" label="Stroked" toggled={this.state.currentConfig.layerSettings.stroked}
                                     onToggle={this._handleStroked}/>
-                            <Toggle className="settings__toggle" label="Extruded" toggled={this.state.currentConfig.overlaySettings.extruded}
+                            <Toggle className="settings__toggle" label="Extruded" toggled={this.state.currentConfig.layerSettings.extruded}
                                     onToggle={this._handleExtruded}/>
-                            <Toggle className="settings__toggle" label="Wireframe" toggled={this.state.currentConfig.overlaySettings.wireframe}
+                            <Toggle className="settings__toggle" label="Wireframe" toggled={this.state.currentConfig.layerSettings.wireframe}
                                     onToggle={this._handleWireframe}/>
-                            <Toggle className="settings__toggle" label="FP64" toggled={this.state.currentConfig.overlaySettings.fp64}
+                            <Toggle className="settings__toggle" label="FP64" toggled={this.state.currentConfig.layerSettings.fp64}
                                     onToggle={this._handleFP64}/>
                             <div className="settings__slider">
                                 <label>Opacity</label>
                                 <Slider min={0} max={1} step={0.01} sliderStyle={sliderStyle}
-                                        value={this.state.currentConfig.overlaySettings.opacity} onChange={this._handleOpacity}/>
+                                        value={this.state.currentConfig.layerSettings.opacity} onChange={this._handleOpacity}/>
                             </div>
                             <div className="settings__slider">
                                 <label>Min Point Radius</label>
                                 <Slider min={1} max={20} step={1} sliderStyle={sliderStyle}
-                                        value={this.state.currentConfig.overlaySettings.pointRadiusMinPixels}
+                                        value={this.state.currentConfig.layerSettings.pointRadiusMinPixels}
                                         onChange={this._handleMinPointRadius}/>
                             </div>
                             <div className="settings__slider">
                                 <label>Point Radius Scale</label>
                                 <Slider min={0} max={1000} step={1} sliderStyle={sliderStyle}
-                                        value={this.state.currentConfig.overlaySettings.pointRadiusScale}
+                                        value={this.state.currentConfig.layerSettings.pointRadiusScale}
                                         onChange={this._handlePointRadiusScale}/>
                             </div>
                             <div className="settings__slider">
                                 <label>Min Line Width</label>
                                 <Slider min={1} max={20} step={1} sliderStyle={sliderStyle}
-                                        value={this.state.currentConfig.overlaySettings.lineWidthMinPixels}
+                                        value={this.state.currentConfig.layerSettings.lineWidthMinPixels}
                                         onChange={this._handleMinLineWidth}/>
                             </div>
                         </div>
                     </div>
                 </Drawer>
-                <Dialog title={this.state.currentConfig.overlays[this.state.currentConfig.overlay].label + ' Settings'}
+                <Dialog title={this.state.currentConfig.layers[this.state.currentConfig.layer].label + ' Settings'}
                         modal={false} open={this.state.showHelp} onRequestClose={this._handleHelpClose} actions={helpActions}
                         autoScrollBodyContent={true} className="settings__help">
                     <dl>

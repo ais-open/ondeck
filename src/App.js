@@ -12,7 +12,7 @@ class App extends Component {
         super(props);
 
         this.configurationManager = new ConfigurationManager(JSON.parse(props.appConfig));
-        const appConfig = this._initOverlaySettings();
+        const appConfig = this._initLayerSettings();
 
         this.state = {
             configuration: appConfig,
@@ -33,11 +33,11 @@ class App extends Component {
         this._handleSnackbarClose = this._handleSnackbarClose.bind(this);
     }
 
-    _initOverlaySettings() {
+    _initLayerSettings() {
         const appConfig = this.configurationManager.getConfig();
-        if (!appConfig.overlaySettings || _.keys(appConfig.overlaySettings).length === 0) {
-            // clone settings of current overlay to root overlaySettings object for easy accessibility
-            appConfig.overlaySettings = _.clone(appConfig.overlays[appConfig.overlay].settings);
+        if (!appConfig.layerSettings || _.keys(appConfig.layerSettings).length === 0) {
+            // clone settings of current layer to root layerSettings object for easy accessibility
+            appConfig.layerSettings = _.clone(appConfig.layers[appConfig.layer].settings);
         }
         return appConfig;
     }
@@ -71,7 +71,7 @@ class App extends Component {
 
     _resetConfiguration() {
         this.configurationManager.reset();
-        const appConfig = this._initOverlaySettings();
+        const appConfig = this._initLayerSettings();
         this._updateConfiguration(appConfig);
         this._handleSnackbarOpen('Settings Reset', 'success');
     }

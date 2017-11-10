@@ -1,11 +1,11 @@
 {
-    "version": 2.5,
+    "version": 2.7,
     "dataUrl": "data/sample.geojson",
     "baseMap": "http://localhost:8080/styles/ne-homebase-dark.json",
     "stateful": "http://localhost:8080",
     "colorRange": "Yellow2Red_3Classes",
-    "overlay": "geojson",
-    "overlaySettings": {},
+    "layer": "geojson",
+    "layerSettings": {},
     "loadingData": false,
     "viewport": {
         "width": 500,
@@ -17,7 +17,7 @@
         "bearing": -27.396674584323023
     },
     "geoColor": [249, 105, 13],
-    "overlays": {
+    "layers": {
         "geojson": {
             "label": "GeoJson",
             "value": "geojson",
@@ -57,7 +57,7 @@
                 "wireframe": false,
                 "fp64": false,
                 "radius": 1000,
-                "coverage": 0.7,
+                "coverage": 1,
                 "lowerPercentile": 0,
                 "upperPercentile": 100,
                 "lowerElevation": 1000,
