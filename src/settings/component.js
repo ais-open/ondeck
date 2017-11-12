@@ -19,6 +19,7 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import './component.css';
 import GeoJsonSettings from './geojson.settings.component';
+import HexagonSettings from './hexagon.settings.component';
 
 export default class SettingsComponent extends Component {
     constructor(props) {
@@ -155,13 +156,14 @@ export default class SettingsComponent extends Component {
                                                      onCloseHelp={this._handleHelpClose} onChange={this._updateState}/>;
                 break;
             case 'hexagon':
-                settingsComponent = null;
+                settingsComponent = <HexagonSettings config={this.props.config} data={this.props.data} showHelp={this.state.showHelp}
+                onCloseHelp={this._handleHelpClose} onChange={this._updateState}/>
                 break;
             default:
                 break;
         }
 
-        return (
+        return(
             <div className="settings">
                 <FloatingActionButton mini className="settings__open-btn" onClick={this._handleDrawerOpen}>
                     <NavigationMenu/>
