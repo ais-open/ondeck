@@ -30,9 +30,7 @@ class MapComponent extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const propCheck = !_.isEqual(prevProps.data, this.props.data) ||
-                          !_.isEqual(prevProps.config, this.props.config);
-        if (propCheck && this.props.data) {
+        if (prevProps.config.dataUrl !== this.props.config.dataUrl && this.props.data) {
             this._centerMap();
         }
     }
@@ -57,7 +55,7 @@ class MapComponent extends Component {
             this._onViewportChange({
                 longitude: bounds.getCenter().lng,
                 latitude: bounds.getCenter().lat,
-                zoom: this.props.config.viewport.zoom
+                zoom: this.state.viewport.zoom
             });
         }
     }
@@ -89,7 +87,7 @@ class MapComponent extends Component {
                 <div key="lng">Lng: {lngLat[0].toFixed(3)}</div>,
                 <div key="lat">Lat: {lngLat[1].toFixed(3)}</div>
             );
-            _.forEach(this.props.layer.tooltipProps, (prop, idx) => {
+            _.forEach(this.props.settings.tooltipProps, (prop, idx) => {
                 tooltipContent.push(<div key={idx}>{prop}: {hoveredFeature.properties[prop]}</div>);
             });
             return (
@@ -121,14 +119,14 @@ class MapComponent extends Component {
 
 MapComponent.propTypes = {
     config: PropTypes.object,
-    layer: PropTypes.object,
+    settings: PropTypes.object,
     data: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
         config: state.config,
-        layer: state.layer,
+        settings: state.settings,
         data: state.data
     };
 };

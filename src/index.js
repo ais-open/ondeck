@@ -12,8 +12,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import GlobalStore from './globalStore';
 import configureStore from './state/store/configureStore';
-import { updateConfig } from './state/actions/configActions';
-import { updateLayerSettings } from './state/actions/layerActions';
+import { updateConfig, saveConfig } from './state/actions/configActions';
+import { updateSettings } from './state/actions/settingsActions';
 
 const muiTheme = getMuiTheme({
     palette: {
@@ -31,23 +31,28 @@ xhttp.onreadystatechange = () => {
         GlobalStore.setStore(store);
         defaultConfig = JSON.parse(xhttp.responseText);
 
-        // store settings of current layer to state
-        store.dispatch(updateLayerSettings(defaultConfig.layers[defaultConfig.layer].settings));
-
         // try to return whatever is stored in localStorage
         const saved = localStorage.getItem('ondeck.configuration');
         if (saved) {
             const savedObj = JSON.parse(saved);
             if (savedObj.version && (savedObj.version >= defaultConfig.version)) {
-                store.dispatch(updateConfig(saved));
+                store.dispatch(updateConfig(savedObj));
+                // store settings of current layer to state
+                store.dispatch(updateSettings(savedObj.layers[savedObj.layer].settings));
             } else {
                 // they have an outdated config, give them the default
                 console.log(`Stored version was ${savedObj.version} - upgrading to ${defaultConfig.version}`);
                 store.dispatch(updateConfig(defaultConfig));
+                store.dispatch(saveConfig(defaultConfig));
+                // store settings of current layer to state
+                store.dispatch(updateSettings(defaultConfig.layers[defaultConfig.layer].settings));
             }
         } else {
             // it's their first time here, give them the default
             store.dispatch(updateConfig(defaultConfig));
+            store.dispatch(saveConfig(defaultConfig));
+            // store settings of current layer to state
+            store.dispatch(updateSettings(defaultConfig.layers[defaultConfig.layer].settings));
         }
 
         // store default config for later use

@@ -20,7 +20,7 @@ import TextField from 'material-ui/TextField';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import { updateConfig, saveConfig, resetConfig } from '../state/actions/configActions';
-import { updateLayerSettings, resetLayerSettings } from '../state/actions/layerActions';
+import { updateSettings, resetSettings } from '../state/actions/settingsActions';
 import { fetchData } from '../state/actions/dataActions';
 import GeoJsonSettings from './geojson.settings.component';
 import HexagonSettings from './hexagon.settings.component';
@@ -70,13 +70,13 @@ class SettingsComponent extends Component {
 
     _saveConfig() {
         let newConfig = _.cloneDeep(this.props.config);
-        newConfig.layers[newConfig.layer].settings = this.props.layer;
+        newConfig.layers[newConfig.layer].settings = this.props.settings;
         this.props.saveConfig(newConfig);
     }
 
     _resetConfig() {
         this.props.resetConfig();
-        this.props.resetLayerSettings();
+        this.props.resetSettings();
     }
 
     _handleDataSource(event) {
@@ -87,13 +87,13 @@ class SettingsComponent extends Component {
 
     _handleDataSourceUpdate() {
         let newConfig = Object.assign({}, this.props.config);
-        let newSettings = Object.assign({}, this.props.layer);
+        let newSettings = Object.assign({}, this.props.settings);
         if (this.state.dataUrl !== this.props.config.dataUrl) {
             newConfig.dataUrl = this.state.dataUrl;
             newSettings.tooltipProps = [];
             this.props.fetchData(newConfig.dataUrl);
             this.props.updateConfig(newConfig);
-            this.props.updateLayerSettings(newSettings);
+            this.props.updateSettings(newSettings);
         }
     }
 
@@ -104,9 +104,8 @@ class SettingsComponent extends Component {
     }
 
     _handleLayer(event, index, value) {
-        let newConfig = _.cloneDeep(this.props.config);
+        let newConfig = Object.assign({}, this.props.config);
         newConfig.layer = value;
-        newConfig.layerSettings = _.clone(newConfig.layers[value].settings);
         this.props.updateConfig(newConfig);
     }
 
@@ -117,13 +116,16 @@ class SettingsComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!_.isEqual(this.props.config, nextProps.config)) {
+        // check for new data url
+        if (this.props.config.dataUrl !== nextProps.config.dataUrl) {
             this.setState({
                 dataUrl: nextProps.config.dataUrl,
             });
-            console.log(nextProps.config.layers[nextProps.config.layer].settings);
-            nextProps.updateLayerSettings(nextProps.config.layers[nextProps.config.layer].settings);
             nextProps.fetchData(nextProps.config.dataUrl);
+        }
+        // check for new layer type
+        if (this.props.config.layer !== nextProps.config.layer) {
+            nextProps.updateSettings(nextProps.config.layers[nextProps.config.layer].settings);
         }
     }
 
@@ -206,21 +208,20 @@ class SettingsComponent extends Component {
 
 SettingsComponent.propTypes = {
     config: PropTypes.object,
-    layer: PropTypes.object,
-    fetchData: PropTypes.func
+    settings: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
         config: state.config,
-        layer: state.layer
+        settings: state.settings
     };
 };
 
 export default connect(mapStateToProps, {
     updateConfig,
-    updateLayerSettings,
-    resetLayerSettings,
+    updateSettings,
+    resetSettings,
     saveConfig,
     resetConfig,
     fetchData

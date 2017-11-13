@@ -10,7 +10,8 @@ import MenuItem from 'material-ui/MenuItem';
 import Toggle from 'material-ui/Toggle';
 import Slider from 'material-ui/Slider';
 
-import { updateLayerSettings } from '../state/actions/layerActions';
+import { updateSettings } from '../state/actions/settingsActions';
+import { updateConfig } from '../state/actions/configActions';
 
 class HexagonSettings extends Component {
     constructor(props, context) {
@@ -20,9 +21,9 @@ class HexagonSettings extends Component {
     }
 
     _handleOnChange(key, value) {
-        let newSettings = Object.assign({}, this.props.layer);
+        let newSettings = Object.assign({}, this.props.settings);
         newSettings[key] = value;
-        this.props.updateLayerSettings(newSettings);
+        this.props.updateSettings(newSettings);
     }
 
     render() {
@@ -45,24 +46,24 @@ class HexagonSettings extends Component {
                 <div>
                     <h3>Hexagon Settings</h3>
                     <SelectField floatingLabelText="Color Range" floatingLabelFixed={true} hintText="Select..."
-                                 className="settings__select" value={this.props.layer.colorRange}
+                                 className="settings__select" value={this.props.settings.colorRange}
                                  onChange={(event, index, value) => {
-                                     this._handleOnChange('tooltipProps', value);
+                                     this._handleOnChange('colorRange', value);
                                  }}>
                         {colorRangeOptions}
                     </SelectField>
-                    <Toggle className="settings__toggle" label="FP64" toggled={this.props.layer.fp64}
+                    <Toggle className="settings__toggle" label="FP64" toggled={this.props.settings.fp64}
                             onToggle={(event, isInputChecked) => {
                                 this._handleOnChange('fp64', isInputChecked);
                             }}/>
-                    <Toggle className="settings__toggle" label="Extruded" toggled={this.props.layer.extruded}
+                    <Toggle className="settings__toggle" label="Extruded" toggled={this.props.settings.extruded}
                             onToggle={(event, isInputChecked) => {
                                 this._handleOnChange('extruded', isInputChecked);
                             }}/>
                     <div className="settings__slider">
                         <label>Opacity</label>
                         <Slider min={0} max={1} step={0.01} sliderStyle={sliderStyle}
-                                value={this.props.layer.opacity}
+                                value={this.props.settings.opacity}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('opacity', value);
                                 }, 250)}/>
@@ -70,7 +71,7 @@ class HexagonSettings extends Component {
                     <div className="settings__slider">
                         <label>Radius</label>
                         <Slider min={10} max={10000} step={10} sliderStyle={sliderStyle}
-                                value={this.props.layer.radius}
+                                value={this.props.settings.radius}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('radius', value);
                                 }, 250)}/>
@@ -78,7 +79,7 @@ class HexagonSettings extends Component {
                     <div className="settings__slider">
                         <label>Coverage</label>
                         <Slider min={0} max={1} step={0.1} sliderStyle={sliderStyle}
-                                value={this.props.layer.coverage}
+                                value={this.props.settings.coverage}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('coverage', value);
                                 }, 250)}/>
@@ -86,7 +87,7 @@ class HexagonSettings extends Component {
                     <div className="settings__slider">
                         <label>Lower Percentile</label>
                         <Slider min={0} max={100} step={1} sliderStyle={sliderStyle}
-                                value={this.props.layer.lowerPercentile}
+                                value={this.props.settings.lowerPercentile}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('lowerPercentile', value);
                                 }, 250)}/>
@@ -94,7 +95,7 @@ class HexagonSettings extends Component {
                     <div className="settings__slider">
                         <label>Upper Percentile</label>
                         <Slider min={0} max={100} step={1} sliderStyle={sliderStyle}
-                                value={this.props.layer.upperPercentile}
+                                value={this.props.settings.upperPercentile}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('upperPercentile', value);
                                 }, 250)}/>
@@ -102,7 +103,7 @@ class HexagonSettings extends Component {
                     <div className="settings__slider">
                         <label>Lower Elevation</label>
                         <Slider min={0} max={100000} step={1000} sliderStyle={sliderStyle}
-                                value={this.props.layer.lowerElevation}
+                                value={this.props.settings.lowerElevation}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('lowerElevation', value);
                                 }, 250)}/>
@@ -110,7 +111,7 @@ class HexagonSettings extends Component {
                     <div className="settings__slider">
                         <label>Upper Elevation</label>
                         <Slider min={0} max={100000} step={1000} sliderStyle={sliderStyle}
-                                value={this.props.layer.upperElevation}
+                                value={this.props.settings.upperElevation}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('upperElevation', value);
                                 }, 250)}/>
@@ -142,18 +143,18 @@ class HexagonSettings extends Component {
 
 HexagonSettings.propTypes = {
     config: PropTypes.object,
-    layerSettings: PropTypes.object,
+    settings: PropTypes.object,
     data: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
         config: state.config,
-        layer: state.layer,
+        settings: state.settings,
         data: state.data
     };
 };
 
 export default connect(mapStateToProps, {
-    updateLayerSettings
+    updateSettings, updateConfig
 })(HexagonSettings);

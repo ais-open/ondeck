@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 import config from './reducers/configReducer';
-import layer from './reducers/layerReducer';
+import settings from './reducers/settingsReducer';
 import data from './reducers/dataReducer';
 
 const rootReducer = combineReducers({
     config,
-    layer,
+    settings,
     data
 });
 

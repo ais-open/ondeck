@@ -10,7 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Toggle from 'material-ui/Toggle';
 import Slider from 'material-ui/Slider';
 
-import { updateLayerSettings } from '../state/actions/layerActions';
+import { updateSettings } from '../state/actions/settingsActions';
 
 class GeoJsonSettings extends Component {
     constructor(props, context) {
@@ -20,9 +20,9 @@ class GeoJsonSettings extends Component {
     }
 
     _handleOnChange(key, value) {
-        let newSettings = Object.assign({}, this.props.layer);
+        let newSettings = Object.assign({}, this.props.settings);
         newSettings[key] = value;
-        this.props.updateLayerSettings(newSettings);
+        this.props.updateSettings(newSettings);
     }
 
     render() {
@@ -48,57 +48,57 @@ class GeoJsonSettings extends Component {
                 <div>
                     <h3>GeoJson Settings</h3>
                     <SelectField floatingLabelText="Tooltip Properties" floatingLabelFixed={true} hintText="Select..."
-                                 className="settings__select" value={this.props.layer.tooltipProps}
+                                 className="settings__select" value={this.props.settings.tooltipProps}
                                  multiple={true} onChange={(event, index, value) => {
                         this._handleOnChange('tooltipProps', value);
                     }}>
                         {_.drop(featurePropOptions)}
                     </SelectField>
                     <SelectField floatingLabelText="Elevation Property" floatingLabelFixed={true} hintText="Select..."
-                                 className="settings__select" value={this.props.layer.elevationProp}
+                                 className="settings__select" value={this.props.settings.elevationProp}
                                  onChange={(event, index, value) => {
                                      this._handleOnChange('elevationProp', value);
                                  }}>
                         {featurePropOptions}
                     </SelectField>
                     <SelectField floatingLabelText="Fill Color Property" floatingLabelFixed={true} hintText="Select..."
-                                 className="settings__select" value={this.props.layer.fillProp}
+                                 className="settings__select" value={this.props.settings.fillProp}
                                  onChange={(event, index, value) => {
                                      this._handleOnChange('fillProp', value);
                                  }}>
                         {featurePropOptions}
                     </SelectField>
                     <SelectField floatingLabelText="Line Color Property" floatingLabelFixed={true} hintText="Select..."
-                                 className="settings__select" value={this.props.layer.lineProp}
+                                 className="settings__select" value={this.props.settings.lineProp}
                                  onChange={(event, index, value) => {
                                      this._handleOnChange('lineProp', value);
                                  }}>
                         {featurePropOptions}
                     </SelectField>
-                    <Toggle className="settings__toggle" label="FP64" toggled={this.props.layer.fp64}
+                    <Toggle className="settings__toggle" label="FP64" toggled={this.props.settings.fp64}
                             onToggle={(event, isInputChecked) => {
                                 this._handleOnChange('fp64', isInputChecked);
                             }}/>
-                    <Toggle className="settings__toggle" label="Filled" toggled={this.props.layer.filled}
+                    <Toggle className="settings__toggle" label="Filled" toggled={this.props.settings.filled}
                             onToggle={(event, isInputChecked) => {
                                 this._handleOnChange('filled', isInputChecked);
                             }}/>
-                    <Toggle className="settings__toggle" label="Stroked" toggled={this.props.layer.stroked}
+                    <Toggle className="settings__toggle" label="Stroked" toggled={this.props.settings.stroked}
                             onToggle={(event, isInputChecked) => {
                                 this._handleOnChange('stroked', isInputChecked);
                             }}/>
-                    <Toggle className="settings__toggle" label="Extruded" toggled={this.props.layer.extruded}
+                    <Toggle className="settings__toggle" label="Extruded" toggled={this.props.settings.extruded}
                             onToggle={(event, isInputChecked) => {
                                 this._handleOnChange('extruded', isInputChecked);
                             }}/>
-                    <Toggle className="settings__toggle" label="Wireframe" toggled={this.props.layer.wireframe}
+                    <Toggle className="settings__toggle" label="Wireframe" toggled={this.props.settings.wireframe}
                             onToggle={(event, isInputChecked) => {
                                 this._handleOnChange('wireframe', isInputChecked);
                             }}/>
                     <div className="settings__slider">
                         <label>Opacity</label>
                         <Slider min={0} max={1} step={0.01} sliderStyle={sliderStyle}
-                                value={this.props.layer.opacity}
+                                value={this.props.settings.opacity}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('opacity', value);
                                 }, 250)}/>
@@ -106,7 +106,7 @@ class GeoJsonSettings extends Component {
                     <div className="settings__slider">
                         <label>Min Point Radius</label>
                         <Slider min={1} max={20} step={1} sliderStyle={sliderStyle}
-                                value={this.props.layer.pointRadiusMinPixels}
+                                value={this.props.settings.pointRadiusMinPixels}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('pointRadiusMinPixels', value);
                                 }, 250)}/>
@@ -114,7 +114,7 @@ class GeoJsonSettings extends Component {
                     <div className="settings__slider">
                         <label>Point Radius Scale</label>
                         <Slider min={0} max={1000} step={1} sliderStyle={sliderStyle}
-                                value={this.props.layer.pointRadiusScale}
+                                value={this.props.settings.pointRadiusScale}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('pointRadiusScale', value);
                                 }, 250)}/>
@@ -122,7 +122,7 @@ class GeoJsonSettings extends Component {
                     <div className="settings__slider">
                         <label>Min Line Width</label>
                         <Slider min={1} max={20} step={1} sliderStyle={sliderStyle}
-                                value={this.props.layer.lineWidthMinPixels}
+                                value={this.props.settings.lineWidthMinPixels}
                                 onChange={_.debounce((event, value) => {
                                     this._handleOnChange('lineWidthMinPixels', value);
                                 }, 250)}/>
@@ -174,18 +174,18 @@ class GeoJsonSettings extends Component {
 
 GeoJsonSettings.propTypes = {
     config: PropTypes.object,
-    layerSettings: PropTypes.object,
+    settings: PropTypes.object,
     data: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
         config: state.config,
-        layer: state.layer,
+        settings: state.settings,
         data: state.data
     };
 };
 
 export default connect(mapStateToProps, {
-    updateLayerSettings
+    updateSettings
 })(GeoJsonSettings);
