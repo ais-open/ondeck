@@ -54,24 +54,28 @@ class LayersComponent extends Component {
                     }
                 });
             } else if (nextProps.config.layer === 'hexagon') {
-                const pts = [];
-                nextProps.data.features.forEach(feature => {
-                    let coords = feature.geometry.coordinates;
-                    pts.push({position: coords});
-                });
-                layerObj = new HexagonLayer({
-                    id: `hexagon`,
-                    data: pts,
-                    opacity: nextProps.config.Settings.opacity,
-                    extruded: nextProps.config.Settings.extruded,
-                    fp64: nextProps.config.Settings.fp64,
-                    radius: nextProps.config.Settings.radius,
-                    coverage: nextProps.config.Settings.coverage,
-                    lowerPercentile: nextProps.config.Settings.lowerPercentile,
-                    upperPercentile: nextProps.config.Settings.upperPercentile,
-                    elevationRange: [nextProps.config.Settings.lowerElevation, nextProps.config.Settings.upperElevation],
-                    lightSettings: nextProps.config.Settings.lightSettings
-                });
+                if (nextProps.data) {
+                    const pts = [];
+                    _.forEach(nextProps.data.features, feature => {
+                        let coords = feature.geometry.coordinates;
+                        pts.push({position: coords});
+                    });
+                    layerObj = new HexagonLayer({
+                        id: `hexagon`,
+                        data: pts,
+                        colorRange: nextProps.config.colorRanges[nextProps.layer.colorRange],
+                        opacity: nextProps.layer.opacity,
+                        extruded: nextProps.layer.extruded,
+                        fp64: nextProps.layer.fp64,
+                        radius: nextProps.layer.radius,
+                        coverage: nextProps.layer.coverage,
+                        lowerPercentile: nextProps.layer.lowerPercentile,
+                        upperPercentile: nextProps.layer.upperPercentile,
+                        elevationRange: [nextProps.layer.lowerElevation, nextProps.layer.upperElevation],
+                        elevationScale: 2,
+                        lightSettings: nextProps.layer.lightSettings
+                    });
+                }
             }
 
             this.setState({
