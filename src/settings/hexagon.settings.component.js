@@ -127,12 +127,13 @@ class HexagonSettings extends Component {
                             <dt>Radius</dt>
                             <dd>Radius of hexagon bin in meters.</dd>
                             <dt>Coverage</dt>
-                            <dd>Hexagon radius multiplier. The final radius of hexagon is calculated by coverage *
-                                radius. Note: coverage does not affect how points are binned. The radius of the bin is determined only by the
-                                radius property.</dd>
+                            <dd>Hexagon radius multiplier. The final radius of a hexagon is calculated by coverage * radius. Note: coverage
+                                does not affect how points are binned. The radius of the bin is determined only by the radius property.</dd>
                             <dt>Lower/Upper Percentile</dt>
-                            <dd>Filter bins and re-calculate color by percentile value. Hexagons with value larger than the upperPercentile
-                                will be hidden, along with hexagons with value smaller than the lowerPercentile.</dd>
+                            <dd>Filter bins and re-calculate color by percentile value. Hexagons with value larger than the upper percentile
+                                will be hidden, along with hexagons with value smaller than the lower percentile.</dd>
+                            <dt>Lower/Upper Elevation</dt>
+                            <dd>Controls the minimum and maximum elevation of hexagons.</dd>
                         </dl>
                     </Dialog>
                 </div>
