@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import MapGL from 'react-map-gl';
-import 'whatwg-fetch';
+import bbox from 'geojson-bbox';
 import * as _ from 'lodash';
 import mapboxgl from 'mapbox-gl';
+
+import { updateConfig } from '../state/actions/configActions';
 
 import LayersComponent from './layers.component';
 import './component.css';
@@ -10,26 +14,14 @@ import './component.css';
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYm93bWFubWMiLCJhIjoieE9WenlhayJ9.QFS8jQtCusMhwwVSMQIg9w';
 const colorScale = r => [r * 255, 140, 200 * (1 - r)];
 
-export default class MapComponent extends Component {
-    constructor(props) {
-        super(props);
+class MapComponent extends Component {
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
-            viewport: {
-                width: props.config.viewport.width,
-                height: props.config.viewport.height,
-                longitude: props.config.viewport.longitude,
-                latitude: props.config.viewport.latitude,
-                zoom: props.config.viewport.zoom,
-                pitch: props.config.viewport.pitch,
-                bearing: props.config.viewport.bearing
-            },
-            data: null,
-            currentConfig: Object.assign({}, this.props.config),
+            viewport: props.config.viewport,
             hoveredFeature: null
         };
-
-        this._fetchData();
     }
 
     componentDidMount() {
@@ -38,81 +30,33 @@ export default class MapComponent extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.config.dataUrl !== prevProps.config.dataUrl) {
-            this._fetchData();
+        if (!_.isEqual(prevProps.data, this.props.data) && this.props.data) {
+            this._centerMap();
         }
     }
 
-    _findCenter() { // this runs as a web worker
-        this.onmessage = (e) => {
-            // determine base url and import necessary scripts
-            if (!location.origin) { // eslint-disable-line
-                location.origin = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port: ''); // eslint-disable-line
-            }
-            const scriptBaseUrl = e.data.url ? `${location.origin}/${e.data.url}` : location.origin; // eslint-disable-line
-            importScripts(`${scriptBaseUrl}/scripts/geojson-bbox.min.js`); // eslint-disable-line
-
+    _centerMap() {
+        if (this.props.data.features) {
             // collect bounds of map features
-            let bounds = [];
-            e.data.features.forEach(feature => {
+            let boundsArr = [];
+            _.forEach(this.props.data.features, feature => {
                 if (feature.geometry.type === 'Point') {
                     // use point lng/lat
-                    bounds.push([feature.geometry.coordinates[0], feature.geometry.coordinates[1]]);
+                    boundsArr.push([feature.geometry.coordinates[0], feature.geometry.coordinates[1]]);
                 } else {
                     // determine extent of polygon, linestring, etc.
-                    const extent = bbox(feature); // eslint-disable-line
-                    bounds.push([extent[0], extent[1]], [extent[2], extent[3]]);
+                    const extent = bbox(feature);
+                    boundsArr.push([extent[0], extent[1]], [extent[2], extent[3]]);
                 }
             });
-            // post message back to main script
-            this.postMessage(bounds);
+            const bounds = new mapboxgl.LngLatBounds(boundsArr);
+
+            // update viewport
+            this._onViewportChange({
+                longitude: bounds.getCenter().lng,
+                latitude: bounds.getCenter().lat
+            });
         }
-    }
-
-    _fetchData() {
-        fetch(this.props.config.dataUrl).then(response => {
-            return response.json();
-        }).then(data => {
-            // init web worker
-            let code = this._findCenter.toString();
-            code = code.substring(code.indexOf('{')+1, code.lastIndexOf('}'));
-
-            const blob = new Blob([code], {type: 'application/javascript'});
-            const worker = new Worker(URL.createObjectURL(blob));
-
-            // handle web worker response
-            worker.onmessage = (msg) => {
-                const bounds = new mapboxgl.LngLatBounds(msg.data);
-
-                // update viewport
-                this._onViewportChange({
-                    longitude: bounds.getCenter().lng,
-                    latitude: bounds.getCenter().lat
-                });
-
-                // update data
-                this.setState({
-                    data: data
-                }, () => {
-                    this.props.onDataChange(data);
-                });
-            };
-
-            // start web worker
-            worker.postMessage({
-                url: process.env.PUBLIC_URL,
-                features: data.features
-            });
-        }).catch(error => {
-            console.error('Error getting data from ' + this.props.config.dataUrl, error);
-            // update data
-            this.setState({
-                data: null
-            }, () => {
-                this.props.onDataChange({});
-            });
-            this.props.onSnackbarOpen(`Error fetching data from ${this.props.config.dataUrl}`, 'error');
-        });
     }
 
     _resize() {
@@ -125,8 +69,6 @@ export default class MapComponent extends Component {
     _onViewportChange(viewport) {
         this.setState({
             viewport: {...this.state.viewport, ...viewport},
-        }, () => {
-            this.props.onViewportChange(viewport);
         });
     }
 
@@ -144,7 +86,7 @@ export default class MapComponent extends Component {
                 <div key="lng">Lng: {lngLat[0].toFixed(3)}</div>,
                 <div key="lat">Lat: {lngLat[1].toFixed(3)}</div>
             );
-            _.forEach(this.state.currentConfig.layerSettings.tooltipProps, (prop, idx) => {
+            _.forEach(this.props.layer.tooltipProps, (prop, idx) => {
                 tooltipContent.push(<div key={idx}>{prop}: {hoveredFeature.properties[prop]}</div>);
             });
             return (
@@ -157,30 +99,37 @@ export default class MapComponent extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!_.isEqual(this.props.config, nextProps.config)) {
-            this.setState({
-                currentConfig: nextProps.config
-            });
-        }
-    }
-
     render() {
-        const {data, viewport, currentConfig} = this.state;
-
         return (
             <div>
                 <MapGL
-                    {...viewport}
-                    mapStyle={currentConfig.baseMap}
+                    {...this.state.viewport}
+                    mapStyle={this.props.config.baseMap}
                     dragRotate={true}
                     onViewportChange={this._onViewportChange.bind(this)}
                     mapboxApiAccessToken={MAPBOX_TOKEN}>
-                    <LayersComponent viewport={viewport} data={data} colorScale={colorScale} onHover={this._onHover.bind(this)}
-                                     layer={currentConfig.layer} settings={currentConfig.layerSettings}/>
+                    <LayersComponent viewport={this.state.viewport} colorScale={colorScale} onHover={this._onHover.bind(this)}/>
                 </MapGL>
                 {this._renderTooltip()}
             </div>
         );
     }
 }
+
+MapComponent.propTypes = {
+    config: PropTypes.object,
+    layer: PropTypes.object,
+    data: PropTypes.object
+};
+
+const mapStateToProps = state => {
+    return {
+        config: state.config,
+        layer: state.layer,
+        data: state.data
+    };
+};
+
+export default connect(mapStateToProps, {
+    updateConfig
+})(MapComponent);

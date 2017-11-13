@@ -1,12 +1,10 @@
 {
-    "version": 2.7,
+    "version": 2.8,
     "dataUrl": "data/sample.geojson",
     "baseMap": "http://localhost:8080/styles/ne-homebase-dark.json",
     "stateful": "http://localhost:8080",
     "colorRange": "Yellow2Red_3Classes",
     "layer": "geojson",
-    "layerSettings": {},
-    "loadingData": false,
     "viewport": {
         "width": 500,
         "height": 500,

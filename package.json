@@ -10,10 +10,15 @@
     "material-ui": "^0.19.4",
     "node-sass-chokidar": "0.0.3",
     "npm-run-all": "^4.1.1",
+    "prop-types": "^15.6.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-map-gl": "^3.0.4",
+    "react-redux": "^5.0.6",
     "react-scripts": "1.0.13",
+    "react-toastify": "^2.2.0",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
@@ -24,5 +29,8 @@
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "redux-immutable-state-invariant": "^2.1.0"
   }
 }
