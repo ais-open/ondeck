@@ -71,6 +71,7 @@ class SettingsComponent extends Component {
     _saveConfig() {
         let newConfig = _.cloneDeep(this.props.config);
         newConfig.layers[newConfig.layer].settings = this.props.settings;
+        newConfig.viewport = this.props.viewport;
         this.props.saveConfig(newConfig);
     }
 

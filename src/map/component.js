@@ -70,6 +70,8 @@ class MapComponent extends Component {
     _onViewportChange(viewport) {
         this.setState({
             viewport: {...this.state.viewport, ...viewport},
+        }, () => {
+            this.props.onViewportChange(this.state.viewport);
         });
     }
 
