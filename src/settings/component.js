@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
 import * as _ from 'lodash';
 
 import SelectField from 'material-ui/SelectField';
@@ -24,7 +25,9 @@ import { updateSettings, resetSettings } from '../state/actions/settingsActions'
 import { fetchData } from '../state/actions/dataActions';
 import GeoJsonSettings from './geojson.settings.component';
 import HexagonSettings from './hexagon.settings.component';
+import StatusToast from '../toast/StatusToast';
 
+import 'react-toastify/dist/ReactToastify.min.css';
 import './component.css';
 
 class SettingsComponent extends Component {
@@ -34,7 +37,8 @@ class SettingsComponent extends Component {
         this.state = {
             drawerOpen: false,
             showHelp: false,
-            dataUrl: this.props.config.dataUrl
+            dataUrl: this.props.config.dataUrl,
+            pending: false
         };
 
         this._handleDrawerOpen = this._handleDrawerOpen.bind(this);
@@ -51,6 +55,8 @@ class SettingsComponent extends Component {
 
         this.props.fetchData(this.props.config.dataUrl);
     }
+
+    toastId = null;
 
     _handleDrawerOpen() {
         this.setState({ drawerOpen: true });
@@ -73,11 +79,21 @@ class SettingsComponent extends Component {
         newConfig.layers[newConfig.layer].settings = this.props.settings;
         newConfig.viewport = this.props.viewport;
         this.props.saveConfig(newConfig);
+        if (!toast.isActive(this.toastId)) {
+            this.toastId = toast(<StatusToast title="Application state saved."/>, {
+                type: toast.TYPE.SUCCESS
+            });
+        }
     }
 
     _resetConfig() {
         this.props.resetConfig();
         this.props.resetSettings();
+        if (!toast.isActive(this.toastId)) {
+            this.toastId = toast(<StatusToast title="Application state reset."/>, {
+                type: toast.TYPE.SUCCESS
+            });
+        }
     }
 
     _handleDataSource(event) {
@@ -128,6 +144,18 @@ class SettingsComponent extends Component {
         if (this.props.config.layer !== nextProps.config.layer) {
             nextProps.updateSettings(nextProps.config.layers[nextProps.config.layer].settings);
         }
+        // check for fetch status
+        if (nextProps.data) {
+            this.setState({
+                pending: nextProps.data.pending
+            });
+            if (nextProps.data.error) {
+                console.log(nextProps.data.error);
+                toast(<StatusToast title="Data Error" message={nextProps.data.error.toString()}/>, {
+                    type: toast.TYPE.ERROR
+                });
+            }
+        }
     }
 
     render() {
@@ -141,7 +169,7 @@ class SettingsComponent extends Component {
         _.forEach(baseMaps, baseMap => {
             baseMapOptions.push(<MenuItem value={baseMap.url} key={baseMap.url} primaryText={baseMap.name}/>);
         });
-        const refreshStatus = this.props.config.loadingData ? 'loading' : 'ready';
+        const refreshStatus = this.state.pending ? 'loading' : 'ready';
 
         let settingsComponent = null;
         switch(this.props.config.layer) {
@@ -202,6 +230,14 @@ class SettingsComponent extends Component {
                         </div>
                     </div>
                 </Drawer>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={3000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    pauseOnHover
+                />
             </div>
         );
     }
@@ -209,13 +245,15 @@ class SettingsComponent extends Component {
 
 SettingsComponent.propTypes = {
     config: PropTypes.object,
-    settings: PropTypes.object
+    settings: PropTypes.object,
+    data: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
         config: state.config,
-        settings: state.settings
+        settings: state.settings,
+        data: state.data
     };
 };
 

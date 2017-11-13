@@ -1,3 +1,17 @@
 .App {
   overflow: hidden;
+
+  .toast-content {
+    text-align: left;
+    font-size: 0.8em;
+
+    h3 {
+      margin-top: 0;
+      padding-top: 0;
+    }
+  }
+
+  .toastify-content--success {
+    background: #135D13;
+  }
 }

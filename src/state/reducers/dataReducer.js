@@ -6,6 +6,8 @@ export default function dataReducer(state = {}, action) {
             return Object.assign({}, action.data, {pending: true});
         case types.DATA__FETCH_DATA_SUCCESS:
             return Object.assign({}, action.data, {pending: false});
+        case types.DATA__FETCH_DATA_ERROR:
+            return Object.assign({}, {pending: false, error: action.error});
         default:
             return state;
     }

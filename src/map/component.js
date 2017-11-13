@@ -30,7 +30,7 @@ class MapComponent extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.config.dataUrl !== this.props.config.dataUrl && this.props.data) {
+        if (!prevProps.config.dataUrl !== this.props.config.dataUrl && this.props.data) {
             this._centerMap();
         }
     }
