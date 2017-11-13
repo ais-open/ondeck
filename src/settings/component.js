@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import * as _ from 'lodash';
 
 import SelectField from 'material-ui/SelectField';
@@ -17,19 +19,22 @@ import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
-import './component.css';
+import { updateConfig, saveConfig, resetConfig } from '../state/actions/configActions';
+import { updateSettings, resetSettings } from '../state/actions/settingsActions';
+import { fetchData } from '../state/actions/dataActions';
 import GeoJsonSettings from './geojson.settings.component';
 import HexagonSettings from './hexagon.settings.component';
 
-export default class SettingsComponent extends Component {
-    constructor(props) {
-        super(props);
+import './component.css';
+
+class SettingsComponent extends Component {
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             drawerOpen: false,
             showHelp: false,
-            dataUrl: this.props.config.dataUrl,
-            currentConfig: Object.assign({}, this.props.config)
+            dataUrl: this.props.config.dataUrl
         };
 
         this._handleDrawerOpen = this._handleDrawerOpen.bind(this);
@@ -38,12 +43,13 @@ export default class SettingsComponent extends Component {
         this._handleHelpClose = this._handleHelpClose.bind(this);
         this._saveConfig = this._saveConfig.bind(this);
         this._resetConfig = this._resetConfig.bind(this);
-        this._updateState = this._updateState.bind(this);
         this._handleDataSource = this._handleDataSource.bind(this);
         this._handleDataSourceUpdate = this._handleDataSourceUpdate.bind(this);
         this._handleDataSourceKeyDown = this._handleDataSourceKeyDown.bind(this);
         this._handleLayer = this._handleLayer.bind(this);
         this._handleBaseMap = this._handleBaseMap.bind(this);
+
+        this.props.fetchData(this.props.config.dataUrl);
     }
 
     _handleDrawerOpen() {
@@ -63,21 +69,15 @@ export default class SettingsComponent extends Component {
     }
 
     _saveConfig() {
-        this.props.onSave(this.state.currentConfig);
+        let newConfig = _.cloneDeep(this.props.config);
+        newConfig.layers[newConfig.layer].settings = this.props.settings;
+        newConfig.viewport = this.props.viewport;
+        this.props.saveConfig(newConfig);
     }
 
     _resetConfig() {
-        this.props.onReset();
-    }
-
-    _updateState(obj, newValue) {
-        let newConfig = _.cloneDeep(this.state.currentConfig);
-        newConfig.layerSettings[obj] = newValue;
-        this.setState({
-            currentConfig: newConfig
-        }, () => {
-            this.props.onChange(newConfig);
-        });
+        this.props.resetConfig();
+        this.props.resetSettings();
     }
 
     _handleDataSource(event) {
@@ -87,16 +87,14 @@ export default class SettingsComponent extends Component {
     }
 
     _handleDataSourceUpdate() {
-        let newConfig = _.cloneDeep(this.state.currentConfig);
-        if (newConfig.dataUrl !== this.state.dataUrl) {
+        let newConfig = Object.assign({}, this.props.config);
+        let newSettings = Object.assign({}, this.props.settings);
+        if (this.state.dataUrl !== this.props.config.dataUrl) {
             newConfig.dataUrl = this.state.dataUrl;
-            newConfig.layerSettings.tooltipProps = [];
-            newConfig.loadingData = true;
-            this.setState({
-                currentConfig: newConfig
-            }, () => {
-                this.props.onChange(newConfig);
-            });
+            newSettings.tooltipProps = [];
+            this.props.fetchData(newConfig.dataUrl);
+            this.props.updateConfig(newConfig);
+            this.props.updateSettings(newSettings);
         }
     }
 
@@ -107,32 +105,28 @@ export default class SettingsComponent extends Component {
     }
 
     _handleLayer(event, index, value) {
-        let newConfig = _.cloneDeep(this.state.currentConfig);
+        let newConfig = Object.assign({}, this.props.config);
         newConfig.layer = value;
-        newConfig.layerSettings = _.clone(newConfig.layers[value].settings);
-        this.setState({
-            currentConfig: newConfig
-        }, () => {
-            this.props.onChange(newConfig);
-        });
+        this.props.updateConfig(newConfig);
     }
 
     _handleBaseMap(event, index, value) {
-        let newConfig = _.cloneDeep(this.state.currentConfig);
+        let newConfig = _.cloneDeep(this.props.config);
         newConfig.baseMap = value;
-        this.setState({
-            currentConfig: newConfig
-        }, () => {
-            this.props.onChange(newConfig);
-        });
+        this.props.updateConfig(newConfig);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!_.isEqual(this.props.config, nextProps.config)) {
+        // check for new data url
+        if (this.props.config.dataUrl !== nextProps.config.dataUrl) {
             this.setState({
                 dataUrl: nextProps.config.dataUrl,
-                currentConfig: nextProps.config
             });
+            nextProps.fetchData(nextProps.config.dataUrl);
+        }
+        // check for new layer type
+        if (this.props.config.layer !== nextProps.config.layer) {
+            nextProps.updateSettings(nextProps.config.layers[nextProps.config.layer].settings);
         }
     }
 
@@ -147,17 +141,15 @@ export default class SettingsComponent extends Component {
         _.forEach(baseMaps, baseMap => {
             baseMapOptions.push(<MenuItem value={baseMap.url} key={baseMap.url} primaryText={baseMap.name}/>);
         });
-        const refreshStatus = this.state.currentConfig.loadingData ? 'loading' : 'ready';
+        const refreshStatus = this.props.config.loadingData ? 'loading' : 'ready';
 
         let settingsComponent = null;
-        switch(this.state.currentConfig.layer) {
+        switch(this.props.config.layer) {
             case 'geojson':
-                settingsComponent = <GeoJsonSettings config={this.props.config} data={this.props.data} showHelp={this.state.showHelp}
-                                                     onCloseHelp={this._handleHelpClose} onChange={this._updateState}/>;
+                settingsComponent = <GeoJsonSettings showHelp={this.state.showHelp} onCloseHelp={this._handleHelpClose}/>;
                 break;
             case 'hexagon':
-                settingsComponent = <HexagonSettings config={this.props.config} data={this.props.data} showHelp={this.state.showHelp}
-                onCloseHelp={this._handleHelpClose} onChange={this._updateState}/>
+                settingsComponent = <HexagonSettings showHelp={this.state.showHelp} onCloseHelp={this._handleHelpClose}/>;
                 break;
             default:
                 break;
@@ -197,12 +189,12 @@ export default class SettingsComponent extends Component {
                                 </IconButton>
                             </div>
                             <SelectField floatingLabelText="Base Map" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.baseMap}
+                                         className="settings__select" value={this.props.config.baseMap}
                                          onChange={this._handleBaseMap}>
                                 {baseMapOptions}
                             </SelectField>
                             <SelectField floatingLabelText="Layer" floatingLabelFixed={true} hintText="Select..."
-                                         className="settings__select" value={this.state.currentConfig.layer}
+                                         className="settings__select" value={this.props.config.layer}
                                          onChange={this._handleLayer}>
                                 {layerOptions}
                             </SelectField>
@@ -214,3 +206,24 @@ export default class SettingsComponent extends Component {
         );
     }
 }
+
+SettingsComponent.propTypes = {
+    config: PropTypes.object,
+    settings: PropTypes.object
+};
+
+const mapStateToProps = state => {
+    return {
+        config: state.config,
+        settings: state.settings
+    };
+};
+
+export default connect(mapStateToProps, {
+    updateConfig,
+    updateSettings,
+    resetSettings,
+    saveConfig,
+    resetConfig,
+    fetchData
+})(SettingsComponent);
