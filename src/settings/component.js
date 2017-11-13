@@ -76,8 +76,6 @@ class SettingsComponent extends Component {
 
     _resetConfig() {
         this.props.resetConfig();
-        console.log(this.props.config);
-        // this.props.updateLayerSettings(defaultConfig.layers[defaultConfig.layer].settings);
     }
 
     _handleDataSource(event) {
@@ -117,14 +115,15 @@ class SettingsComponent extends Component {
         this.props.updateConfig(newConfig);
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     if (!_.isEqual(this.props.config, nextProps.config)) {
-    //         this.setState({
-    //             dataUrl: nextProps.config.dataUrl,
-    //             currentConfig: nextProps.config
-    //         });
-    //     }
-    // }
+    componentWillReceiveProps(nextProps) {
+        if (!_.isEqual(this.props.config, nextProps.config)) {
+            this.setState({
+                dataUrl: nextProps.config.dataUrl,
+            });
+            nextProps.updateLayerSettings(nextProps.config.layers[nextProps.config.layer].settings);
+            nextProps.fetchData(nextProps.config.dataUrl);
+        }
+    }
 
     render() {
         const layers = _.values(this.props.config.layers);

@@ -30,7 +30,7 @@ class MapComponent extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!_.isEqual(prevProps.data, this.props.data) && this.props.data) {
+        if ((!_.isEqual(prevProps.data, this.props.data) || !_.isEqual(prevProps.config, this.props.config)) && this.props.data) {
             this._centerMap();
         }
     }
