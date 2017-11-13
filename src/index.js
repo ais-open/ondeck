@@ -38,7 +38,7 @@ xhttp.onreadystatechange = () => {
         const saved = localStorage.getItem('ondeck.configuration');
         if (saved) {
             const savedObj = JSON.parse(saved);
-            if (savedObj.version && (savedObj.version >= this.defaultConfig.version)) {
+            if (savedObj.version && (savedObj.version >= defaultConfig.version)) {
                 store.dispatch(updateConfig(saved));
             } else {
                 // they have an outdated config, give them the default

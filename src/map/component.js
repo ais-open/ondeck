@@ -30,7 +30,9 @@ class MapComponent extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if ((!_.isEqual(prevProps.data, this.props.data) || !_.isEqual(prevProps.config, this.props.config)) && this.props.data) {
+        const propCheck = !_.isEqual(prevProps.data, this.props.data) ||
+                          !_.isEqual(prevProps.config, this.props.config);
+        if (propCheck && this.props.data) {
             this._centerMap();
         }
     }
@@ -54,7 +56,8 @@ class MapComponent extends Component {
             // update viewport
             this._onViewportChange({
                 longitude: bounds.getCenter().lng,
-                latitude: bounds.getCenter().lat
+                latitude: bounds.getCenter().lat,
+                zoom: this.props.config.viewport.zoom
             });
         }
     }

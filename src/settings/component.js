@@ -20,7 +20,7 @@ import TextField from 'material-ui/TextField';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 import { updateConfig, saveConfig, resetConfig } from '../state/actions/configActions';
-import { updateLayerSettings } from '../state/actions/layerActions';
+import { updateLayerSettings, resetLayerSettings } from '../state/actions/layerActions';
 import { fetchData } from '../state/actions/dataActions';
 import GeoJsonSettings from './geojson.settings.component';
 import HexagonSettings from './hexagon.settings.component';
@@ -76,6 +76,7 @@ class SettingsComponent extends Component {
 
     _resetConfig() {
         this.props.resetConfig();
+        this.props.resetLayerSettings();
     }
 
     _handleDataSource(event) {
@@ -120,6 +121,7 @@ class SettingsComponent extends Component {
             this.setState({
                 dataUrl: nextProps.config.dataUrl,
             });
+            console.log(nextProps.config.layers[nextProps.config.layer].settings);
             nextProps.updateLayerSettings(nextProps.config.layers[nextProps.config.layer].settings);
             nextProps.fetchData(nextProps.config.dataUrl);
         }
@@ -218,6 +220,7 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
     updateConfig,
     updateLayerSettings,
+    resetLayerSettings,
     saveConfig,
     resetConfig,
     fetchData
