@@ -28,6 +28,9 @@ class LayersComponent extends Component {
                         `geojson${nextProps.settings.elevationProp}` :
                         'geojson';
                 }
+                if (this.props.settings.colorRange !== nextProps.settings.colorRange) {
+                    layerId = `${layerId}${nextProps.settings.colorRange}`;
+                }
                 if (nextProps.config.layer === 'geojson') {
                     layerObj = new GeoJsonLayer({
                         id: layerId,

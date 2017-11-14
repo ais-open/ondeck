@@ -27,6 +27,12 @@ class GeoJsonSettings extends Component {
 
     render() {
         if (this.props.data) {
+            const colorRangeOptions = [];
+            _.forEach(_.keys(this.props.config.colorRanges), colorRange => {
+                colorRangeOptions.push(
+                    <MenuItem value={colorRange} key={colorRange} primaryText={colorRange}/>
+                );
+            });
             const featurePropOptions = [
                 <MenuItem value={null} key="none" primaryText=""/>
             ];
@@ -47,6 +53,13 @@ class GeoJsonSettings extends Component {
             return (
                 <div>
                     <h3>GeoJson Settings</h3>
+                    <SelectField floatingLabelText="Color Range" floatingLabelFixed={true} hintText="Select..."
+                                 className="settings__select" value={this.props.settings.colorRange}
+                                 onChange={(event, index, value) => {
+                                     this._handleOnChange('colorRange', value);
+                                 }}>
+                        {colorRangeOptions}
+                    </SelectField>
                     <SelectField floatingLabelText="Tooltip Properties" floatingLabelFixed={true} hintText="Select..."
                                  className="settings__select" value={this.props.settings.tooltipProps}
                                  multiple={true} onChange={(event, index, value) => {

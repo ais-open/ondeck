@@ -1,5 +1,5 @@
 {
-    "version": 3.8,
+    "version": 3.9,
     "dataUrl": "data/sample.geojson",
     "baseMap": "http://localhost:8080/styles/ne-homebase-dark.json",
     "stateful": "http://localhost:8080",
@@ -19,6 +19,7 @@
             "label": "GeoJson",
             "value": "geojson",
             "settings": {
+                "colorRange": "Reds_7Classes",
                 "tooltipProps": [],
                 "elevationProp": "",
                 "fillProp": "",

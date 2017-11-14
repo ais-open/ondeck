@@ -127,7 +127,7 @@ class SettingsComponent extends Component {
     }
 
     _handleBaseMap(event, index, value) {
-        let newConfig = Object.assign({}, this.props.config);
+        let newConfig = _.cloneDeep(this.props.config);
         newConfig.baseMap = value;
         this.props.updateConfig(newConfig);
     }
@@ -138,6 +138,7 @@ class SettingsComponent extends Component {
             this.setState({
                 dataUrl: nextProps.config.dataUrl,
             });
+
             nextProps.fetchData(nextProps.config.dataUrl);
         }
         // check for new layer type
@@ -145,7 +146,7 @@ class SettingsComponent extends Component {
             nextProps.updateSettings(nextProps.config.layers[nextProps.config.layer].settings);
         }
         // check for fetch status
-        if (!_.isEqual(this.props.data, nextProps.data) && nextProps.data) {
+        if (nextProps.data) {
             this.setState({
                 pending: nextProps.data.pending
             });

@@ -12,7 +12,6 @@ import LayersComponent from './layers.component';
 import './component.css';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYm93bWFubWMiLCJhIjoieE9WenlhayJ9.QFS8jQtCusMhwwVSMQIg9w';
-const colorScale = r => [r * 255, 140, 200 * (1 - r)];
 
 class MapComponent extends Component {
     constructor(props, context) {
@@ -22,6 +21,15 @@ class MapComponent extends Component {
             viewport: props.config.viewport,
             hoveredFeature: null
         };
+    }
+
+    _colorScale(x) {
+        const colorRange = this.props.config.colorRanges[this.props.settings.colorRange];
+        const i = Math.round(x * 4) + 2;
+        if (x < 0) {
+            return colorRange[i] || colorRange[0];
+        }
+        return colorRange[i] || colorRange[colorRange.length - 1];
     }
 
     _centerMap() {
@@ -112,7 +120,8 @@ class MapComponent extends Component {
                     dragRotate={true}
                     onViewportChange={this._onViewportChange.bind(this)}
                     mapboxApiAccessToken={MAPBOX_TOKEN}>
-                    <LayersComponent viewport={this.state.viewport} colorScale={colorScale} onHover={this._onHover.bind(this)}/>
+                    <LayersComponent viewport={this.state.viewport} colorScale={this._colorScale.bind(this)}
+                                     onHover={this._onHover.bind(this)}/>
                 </MapGL>
                 {this._renderTooltip()}
             </div>
