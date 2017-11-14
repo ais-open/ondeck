@@ -29,9 +29,9 @@ class HexagonSettings extends Component {
     render() {
         if (this.props.data) {
             const colorRangeOptions = [];
-            _.forEach(_.keys(this.props.config.colorRanges), colorRange => {
+            _.forEach(_.values(this.props.config.colorRanges), colorRange => {
                 colorRangeOptions.push(
-                    <MenuItem value={colorRange} key={colorRange} primaryText={colorRange}/>
+                    <MenuItem value={colorRange.label} key={colorRange.label} primaryText={colorRange.label}/>
                 );
             });
             const sliderStyle = {

@@ -65,7 +65,7 @@ class LayersComponent extends Component {
                     layerObj = new HexagonLayer({
                         id: `hexagon`,
                         data: pts,
-                        colorRange: nextProps.config.colorRanges[nextProps.settings.colorRange],
+                        colorRange: nextProps.config.colorRanges[nextProps.settings.colorRange].value,
                         opacity: nextProps.settings.opacity,
                         extruded: nextProps.settings.extruded,
                         fp64: nextProps.settings.fp64,

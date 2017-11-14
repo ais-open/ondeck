@@ -19,17 +19,29 @@ class MapComponent extends Component {
 
         this.state = {
             viewport: props.config.viewport,
-            hoveredFeature: null
+            hoveredFeature: null,
+            featureProps: null
         };
+
+        this._colorScale = this._colorScale.bind(this);
     }
 
-    _colorScale(x) {
-        const colorRange = this.props.config.colorRanges[this.props.settings.colorRange];
-        const i = Math.round(x * 4) + 2;
-        if (x < 0) {
-            return colorRange[i] || colorRange[0];
+    _colorScale(value) {
+        const colorRange = this.props.config.colorRanges[this.props.settings.colorRange].value;
+        if (typeof value === 'undefined' || value === null) {
+            return colorRange[0];
         }
-        return colorRange[i] || colorRange[colorRange.length - 1];
+        let range = null;
+        if (this.state.featureProps.length > colorRange.length) {
+            range = Math.ceil(this.state.featureProps.length / colorRange.length);
+        } else {
+            range = 1;
+        }
+        const valueIdx = _.indexOf(this.state.featureProps, value);
+        if (valueIdx < 0) {
+            return colorRange[0];
+        }
+        return colorRange[Math.floor(valueIdx / range)] || colorRange[colorRange.length - 1];
     }
 
     _centerMap() {
@@ -108,6 +120,20 @@ class MapComponent extends Component {
     componentDidUpdate(prevProps) {
         if (!_.isEqual(prevProps.data, this.props.data) && !this.props.data.pending) {
             this._centerMap();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.config.layer === 'geojson') {
+            if (this.props.settings.fillProp !== nextProps.settings.fillProp) {
+                this.setState({
+                    featureProps: _.sortBy(_.uniq(_.map(nextProps.data.features, `properties.${nextProps.settings.fillProp}`)))
+                });
+            } else if (this.props.settings.lineProp !== nextProps.settings.lineProp) {
+                this.setState({
+                    featureProps: _.sortBy(_.uniq(_.map(nextProps.data.features, `properties.${nextProps.settings.lineProp}`)))
+                });
+            }
         }
     }
 
