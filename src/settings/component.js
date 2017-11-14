@@ -127,7 +127,7 @@ class SettingsComponent extends Component {
     }
 
     _handleBaseMap(event, index, value) {
-        let newConfig = _.cloneDeep(this.props.config);
+        let newConfig = Object.assign({}, this.props.config);
         newConfig.baseMap = value;
         this.props.updateConfig(newConfig);
     }
@@ -145,7 +145,7 @@ class SettingsComponent extends Component {
             nextProps.updateSettings(nextProps.config.layers[nextProps.config.layer].settings);
         }
         // check for fetch status
-        if (nextProps.data) {
+        if (!_.isEqual(this.props.data, nextProps.data) && nextProps.data) {
             this.setState({
                 pending: nextProps.data.pending
             });
@@ -232,7 +232,7 @@ class SettingsComponent extends Component {
                 </Drawer>
                 <ToastContainer
                     position="top-right"
-                    autoClose={3000}
+                    autoClose={5000}
                     hideProgressBar={false}
                     newestOnTop={false}
                     closeOnClick

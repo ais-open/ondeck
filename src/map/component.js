@@ -24,22 +24,12 @@ class MapComponent extends Component {
         };
     }
 
-    componentDidMount() {
-        window.addEventListener('resize', this._resize.bind(this));
-        this._resize();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (!prevProps.config.dataUrl !== this.props.config.dataUrl && this.props.data) {
-            this._centerMap();
-        }
-    }
-
     _centerMap() {
         if (this.props.data.features) {
             // collect bounds of map features
-            let boundsArr = [];
-            _.forEach(this.props.data.features, feature => {
+            const features = _.sampleSize(this.props.data.features, 20);
+            const boundsArr = [];
+            _.forEach(features, feature => {
                 if (feature.geometry.type === 'Point') {
                     // use point lng/lat
                     boundsArr.push([feature.geometry.coordinates[0], feature.geometry.coordinates[1]]);
@@ -99,6 +89,17 @@ class MapComponent extends Component {
                     </div>
                 </div>
             );
+        }
+    }
+
+    componentDidMount() {
+        window.addEventListener('resize', this._resize.bind(this));
+        this._resize();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(prevProps.data, this.props.data) && !this.props.data.pending) {
+            this._centerMap();
         }
     }
 
