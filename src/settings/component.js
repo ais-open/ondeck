@@ -58,7 +58,6 @@ class SettingsComponent extends Component {
 
     settingsToast = null;
     fetchToast = null;
-    fetchToastCount = 0;
 
     _handleDrawerOpen() {
         this.setState({ drawerOpen: true });
@@ -152,16 +151,14 @@ class SettingsComponent extends Component {
             nextProps.updateSettings(nextProps.config.layers[nextProps.config.layer].settings);
         }
         // check for fetch status
-        if (nextProps.data) {
+        if (nextProps.data && !_.isEqual(this.props.data, nextProps.data)) {
             this.setState({
                 pending: nextProps.data.pending
             });
             if (nextProps.data.error) {
-                if (this.fetchToastCount === 0) {
-                    this.fetchToastCount++;
+                if (!toast.isActive(this.fetchToast)) {
                     this.fetchToast = toast(<StatusToast title="Data Error" message={nextProps.data.error.toString()}/>, {
-                        type: toast.TYPE.ERROR,
-                        onClose: () => this.fetchToastCount = 0
+                        type: toast.TYPE.ERROR
                     });
                 }
             }
