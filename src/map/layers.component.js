@@ -75,7 +75,9 @@ class LayersComponent extends Component {
                         upperPercentile: nextProps.settings.upperPercentile,
                         elevationRange: [nextProps.settings.lowerElevation, nextProps.settings.upperElevation],
                         elevationScale: 2,
-                        lightSettings: nextProps.settings.lightSettings
+                        lightSettings: nextProps.settings.lightSettings,
+                        pickable: true,
+                        onHover: nextProps.onHover
                     });
                 }
 
