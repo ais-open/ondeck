@@ -56,7 +56,9 @@ class SettingsComponent extends Component {
         this.props.fetchData(this.props.config.dataUrl);
     }
 
-    toastId = null;
+    settingsToast = null;
+    fetchToast = null;
+    fetchToastCount = 0;
 
     _handleDrawerOpen() {
         this.setState({ drawerOpen: true });
@@ -79,20 +81,24 @@ class SettingsComponent extends Component {
         newConfig.layers[newConfig.layer].settings = this.props.settings;
         newConfig.viewport = this.props.viewport;
         this.props.saveConfig(newConfig);
-        if (!toast.isActive(this.toastId)) {
-            this.toastId = toast(<StatusToast title="Application state saved."/>, {
-                type: toast.TYPE.SUCCESS
-            });
+        if (!toast.isActive(this.settingsToast)) {
+            if (!toast.isActive(this.settingsToast)) {
+                this.settingsToast = toast(<StatusToast title="Application state saved."/>, {
+                    type: toast.TYPE.SUCCESS
+                });
+            }
         }
     }
 
     _resetConfig() {
         this.props.resetConfig();
         this.props.resetSettings();
-        if (!toast.isActive(this.toastId)) {
-            this.toastId = toast(<StatusToast title="Application state reset."/>, {
-                type: toast.TYPE.SUCCESS
-            });
+        if (!toast.isActive(this.settingsToast)) {
+            if (!toast.isActive(this.settingsToast)) {
+                this.settingsToast = toast(<StatusToast title="Application state reset."/>, {
+                    type: toast.TYPE.SUCCESS
+                });
+            }
         }
     }
 
@@ -151,10 +157,13 @@ class SettingsComponent extends Component {
                 pending: nextProps.data.pending
             });
             if (nextProps.data.error) {
-                console.log(nextProps.data.error);
-                toast(<StatusToast title="Data Error" message={nextProps.data.error.toString()}/>, {
-                    type: toast.TYPE.ERROR
-                });
+                if (this.fetchToastCount === 0) {
+                    this.fetchToastCount++;
+                    this.fetchToast = toast(<StatusToast title="Data Error" message={nextProps.data.error.toString()}/>, {
+                        type: toast.TYPE.ERROR,
+                        onClose: () => this.fetchToastCount = 0
+                    });
+                }
             }
         }
     }
