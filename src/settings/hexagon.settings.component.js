@@ -5,13 +5,10 @@ import * as _ from 'lodash';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import Toggle from 'material-ui/Toggle';
 import Slider from 'material-ui/Slider';
 
 import { updateSettings } from '../state/actions/settingsActions';
-import { updateConfig } from '../state/actions/configActions';
 
 class HexagonSettings extends Component {
     constructor(props, context) {
@@ -28,12 +25,6 @@ class HexagonSettings extends Component {
 
     render() {
         if (this.props.data) {
-            const colorRangeOptions = [];
-            _.forEach(_.values(this.props.config.colorRanges), colorRange => {
-                colorRangeOptions.push(
-                    <MenuItem value={colorRange.label} key={colorRange.label} primaryText={colorRange.label}/>
-                );
-            });
             const sliderStyle = {
                 marginTop: 0,
                 marginBottom: 0
@@ -45,29 +36,10 @@ class HexagonSettings extends Component {
             return(
                 <div>
                     <h3>Hexagon Settings</h3>
-                    <SelectField floatingLabelText="Color Range" floatingLabelFixed={true} hintText="Select..."
-                                 className="settings__select" value={this.props.settings.colorRange}
-                                 onChange={(event, index, value) => {
-                                     this._handleOnChange('colorRange', value);
-                                 }}>
-                        {colorRangeOptions}
-                    </SelectField>
-                    <Toggle className="settings__toggle" label="FP64" toggled={this.props.settings.fp64}
-                            onToggle={(event, isInputChecked) => {
-                                this._handleOnChange('fp64', isInputChecked);
-                            }}/>
                     <Toggle className="settings__toggle" label="Extruded" toggled={this.props.settings.extruded}
                             onToggle={(event, isInputChecked) => {
                                 this._handleOnChange('extruded', isInputChecked);
                             }}/>
-                    <div className="settings__slider">
-                        <label>Opacity</label>
-                        <Slider min={0} max={1} step={0.01} sliderStyle={sliderStyle}
-                                value={this.props.settings.opacity}
-                                onChange={_.debounce((event, value) => {
-                                    this._handleOnChange('opacity', value);
-                                }, 250)}/>
-                    </div>
                     <div className="settings__slider">
                         <label>Radius</label>
                         <Slider min={10} max={10000} step={10} sliderStyle={sliderStyle}
@@ -157,5 +129,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-    updateSettings, updateConfig
+    updateSettings
 })(HexagonSettings);

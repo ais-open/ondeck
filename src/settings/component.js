@@ -5,6 +5,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import * as _ from 'lodash';
 
 import SelectField from 'material-ui/SelectField';
+import Toggle from 'material-ui/Toggle';
+import Slider from 'material-ui/Slider';
 import Drawer from 'material-ui/Drawer';
 import IconButton from 'material-ui/IconButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -52,6 +54,7 @@ class SettingsComponent extends Component {
         this._handleDataSourceKeyDown = this._handleDataSourceKeyDown.bind(this);
         this._handleLayer = this._handleLayer.bind(this);
         this._handleBaseMap = this._handleBaseMap.bind(this);
+        this._handleOnChange = this._handleOnChange.bind(this);
 
         this.props.fetchData(this.props.config.dataUrl);
     }
@@ -137,6 +140,12 @@ class SettingsComponent extends Component {
         this.props.updateConfig(newConfig);
     }
 
+    _handleOnChange(key, value) {
+        let newSettings = Object.assign({}, this.props.settings);
+        newSettings[key] = value;
+        this.props.updateSettings(newSettings);
+    }
+
     componentWillReceiveProps(nextProps) {
         // check for new data url
         if (this.props.config.dataUrl !== nextProps.config.dataUrl) {
@@ -166,6 +175,10 @@ class SettingsComponent extends Component {
     }
 
     render() {
+        const sliderStyle = {
+            marginTop: 0,
+            marginBottom: 0
+        };
         const layers = _.values(this.props.config.layers);
         const layerOptions = [];
         _.forEach(layers, layer => {
@@ -177,6 +190,12 @@ class SettingsComponent extends Component {
             baseMapOptions.push(<MenuItem value={baseMap.url} key={baseMap.url} primaryText={baseMap.name}/>);
         });
         const refreshStatus = this.state.pending ? 'loading' : 'ready';
+        const colorRangeOptions = [];
+        _.forEach(_.values(this.props.config.colorRanges), colorRange => {
+            colorRangeOptions.push(
+                <MenuItem value={colorRange.label} key={colorRange.label} primaryText={colorRange.label}/>
+            );
+        });
 
         let settingsComponent = null;
         switch(this.props.config.layer) {
@@ -228,6 +247,28 @@ class SettingsComponent extends Component {
                                          onChange={this._handleBaseMap}>
                                 {baseMapOptions}
                             </SelectField>
+                            <h3>Common Settings</h3>
+                            <SelectField floatingLabelText="Color Range" floatingLabelFixed={true} hintText="Select..."
+                                         className="settings__select" value={this.props.settings.colorRange}
+                                         onChange={(event, index, value) => {
+                                             this._handleOnChange('colorRange', value);
+                                         }}>
+                                {colorRangeOptions}
+                            </SelectField>
+                            <Toggle className="settings__toggle" label="FP64" toggled={this.props.settings.fp64}
+                                    onToggle={(event, isInputChecked) => {
+                                        this._handleOnChange('fp64', isInputChecked);
+                                    }}/>
+                            <div className="settings__slider">
+                                <label>Opacity</label>
+                                <Slider min={0} max={1} step={0.01} sliderStyle={sliderStyle}
+                                        value={this.props.settings.opacity}
+                                        onChange={_.debounce((event, value) => {
+                                            this._handleOnChange('opacity', value);
+                                        }, 250)}/>
+                            </div>
+                            <Divider/>
+                            <h3>Layer Type</h3>
                             <SelectField floatingLabelText="Layer" floatingLabelFixed={true} hintText="Select..."
                                          className="settings__select" value={this.props.config.layer}
                                          onChange={this._handleLayer}>
