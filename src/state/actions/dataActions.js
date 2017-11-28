@@ -1,5 +1,5 @@
 import * as types from './dataActionTypes';
-import DataApi from '../../dataApi';
+import DataApi from '../../api/DataApi';
 
 function fetchPending(data) {
     return {

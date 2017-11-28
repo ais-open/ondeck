@@ -2,18 +2,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import './index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 
 import {blue500, grey500} from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
+import registerServiceWorker from './registerServiceWorker';
 import GlobalStore from './globalStore';
 import configureStore from './state/store/configureStore';
 import { updateConfig, saveConfig } from './state/actions/configActions';
 import { updateSettings } from './state/actions/settingsActions';
+import App from './App';
+import StatefulApi from './api/StatefulApi';
+import { updateStatefulStatus } from './state/actions/statefulActions';
+
+import './index.css';
 
 const muiTheme = getMuiTheme({
     palette: {
@@ -22,9 +25,59 @@ const muiTheme = getMuiTheme({
     }
 });
 
+let statefulStatus = {
+    value: false,
+    error: null
+};
+
+const getStateId = () => {
+    let query = window.location.search.substring(1);
+    let vars = query.split('&');
+    for (let i = 0; i < vars.length; i++) {
+        let pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) === 'id') {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+};
+
 const xhttp = new XMLHttpRequest();
 let defaultConfig = {};
 let store = null;
+let stateId = getStateId();
+
+const render = () => {
+    store.dispatch(updateStatefulStatus(statefulStatus));
+    ReactDOM.render(
+        <Provider store={store}>
+            <MuiThemeProvider muiTheme={muiTheme}>
+                <App/>
+            </MuiThemeProvider>
+        </Provider>, document.getElementById('root')
+    );
+    registerServiceWorker();
+};
+
+const init = (checkStateful) => {
+    if (!statefulStatus.value && checkStateful) {
+        StatefulApi.getVersion(`${defaultConfig.stateful}/version`).then(() => {
+            statefulStatus = {
+                value: true,
+                error: null
+            };
+            render();
+        }).catch((err) => {
+            statefulStatus = {
+                value: false,
+                error: err.message
+            };
+            render();
+        });
+    } else {
+        render();
+    }
+};
+
 xhttp.onreadystatechange = () => {
     if (xhttp.readyState === 4 && xhttp.status === 200) {
         store = configureStore();
@@ -59,14 +112,38 @@ xhttp.onreadystatechange = () => {
         const c = JSON.stringify(defaultConfig);
         localStorage.setItem('ondeck.default_configuration', c);
 
-        ReactDOM.render(
-            <Provider store={store}>
-                <MuiThemeProvider muiTheme={muiTheme}>
-                    <App/>
-                </MuiThemeProvider>
-            </Provider>, document.getElementById('root')
-        );
-        registerServiceWorker();
+        if (stateId) {
+            StatefulApi.getState(`${defaultConfig.stateful}/states/state/${stateId}`).then(result => {
+                let initialState = {};
+                try {
+                    initialState = JSON.parse(result.user_state);
+                    store = configureStore(initialState);
+                    GlobalStore.setStore(store);
+
+                    statefulStatus = {
+                        value: true,
+                        error: null
+                    };
+                    store.dispatch(updateStatefulStatus(statefulStatus));
+
+                    render();
+                } catch (err) {
+                    statefulStatus = {
+                        value: true,
+                        error: err.message
+                    };
+                    init(false);
+                }
+            }).catch((err) => {
+                statefulStatus = {
+                    value: false,
+                    error: err.message
+                };
+                init(false);
+            });
+        } else {
+            init(true);
+        }
     }
 };
 
