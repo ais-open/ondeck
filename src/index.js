@@ -124,8 +124,6 @@ xhttp.onreadystatechange = () => {
                         value: true,
                         error: null
                     };
-                    store.dispatch(updateStatefulStatus(statefulStatus));
-
                     render();
                 } catch (err) {
                     statefulStatus = {
