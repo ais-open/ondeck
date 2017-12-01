@@ -12,8 +12,11 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import GlobalStore from './globalStore';
 import configureStore from './state/store/configureStore';
+import StatefulApi from './api/StatefulApi';
 import { updateConfig, saveConfig } from './state/actions/configActions';
+import { setDefaultConfig } from './state/actions/defaultConfigActions';
 import { updateSettings } from './state/actions/settingsActions';
+import { updateStatefulStatus } from './state/actions/statefulActions';
 
 const muiTheme = getMuiTheme({
     palette: {
@@ -56,17 +59,43 @@ xhttp.onreadystatechange = () => {
         }
 
         // store default config for later use
-        const c = JSON.stringify(defaultConfig);
-        localStorage.setItem('ondeck.default_configuration', c);
+        store.dispatch(setDefaultConfig(defaultConfig));
 
-        ReactDOM.render(
-            <Provider store={store}>
-                <MuiThemeProvider muiTheme={muiTheme}>
-                    <App/>
-                </MuiThemeProvider>
-            </Provider>, document.getElementById('root')
-        );
-        registerServiceWorker();
+        let statefulStatus = {
+            value: false,
+            error: null
+        };
+
+        const render = () => {
+            store.dispatch(updateStatefulStatus(statefulStatus));
+            ReactDOM.render(
+                <Provider store={store}>
+                    <MuiThemeProvider muiTheme={muiTheme}>
+                        <App/>
+                    </MuiThemeProvider>
+                </Provider>, document.getElementById('root')
+            );
+            registerServiceWorker();
+        };
+
+        // attempt to reach stateful service before rendering
+        if (defaultConfig.stateful) {
+            StatefulApi.getVersion(`${defaultConfig.stateful}/version`).then(() => {
+                statefulStatus = {
+                    value: true,
+                    error: null
+                };
+                render();
+            }).catch(err => {
+                statefulStatus = {
+                    value: false,
+                    error: err.message
+                };
+                render();
+            });
+        } else {
+            render();
+        }
     }
 };
 

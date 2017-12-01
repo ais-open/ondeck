@@ -1,6 +1,6 @@
 import React from 'react';
 
-const StatusToast = (props) => {
+const StatusToast = props => {
     return (
         <div className="toast-content">
             <h3>{props.title}</h3>

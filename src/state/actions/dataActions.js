@@ -1,5 +1,5 @@
 import * as types from './dataActionTypes';
-import DataApi from '../../dataApi';
+import DataApi from '../../api/DataApi';
 
 function fetchPending(data) {
     return {
@@ -30,5 +30,12 @@ export function fetchData(url) {
         }).catch(error => {
             dispatch(fetchError(error))
         });
+    };
+}
+
+export function updateData(data) {
+    return {
+        type: types.DATA__UPDATE_DATA,
+        data
     };
 }

@@ -18,16 +18,19 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ActionHelp from 'material-ui/svg-icons/action/help';
 import ActionCached from 'material-ui/svg-icons/action/cached';
 import ContentSave from 'material-ui/svg-icons/content/save';
+import SocialShare from 'material-ui/svg-icons/social/share';
 import Divider from 'material-ui/Divider';
 import TextField from 'material-ui/TextField';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
-import { updateConfig, saveConfig, resetConfig } from '../state/actions/configActions';
+import { updateConfig, saveConfig } from '../state/actions/configActions';
 import { updateSettings, resetSettings } from '../state/actions/settingsActions';
 import { fetchData } from '../state/actions/dataActions';
 import GeoJsonSettings from './geojson.settings.component';
 import HexagonSettings from './hexagon.settings.component';
 import StatusToast from '../toast/StatusToast';
+import ShareToast from '../toast/ShareToast';
+import StatefulApi from '../api/StatefulApi';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import './component.css';
@@ -56,7 +59,9 @@ class SettingsComponent extends Component {
         this._handleBaseMap = this._handleBaseMap.bind(this);
         this._handleOnChange = this._handleOnChange.bind(this);
 
-        this.props.fetchData(this.props.config.dataUrl);
+        if (_.keys(this.props.data).length === 0) {
+            this.props.fetchData(this.props.config.dataUrl);
+        }
     }
 
     settingsToast = null;
@@ -93,8 +98,8 @@ class SettingsComponent extends Component {
     }
 
     _resetConfig() {
-        this.props.resetConfig();
-        this.props.resetSettings();
+        this.props.updateConfig(this.props.defaultConfig);
+        this.props.resetSettings(this.props.defaultConfig);
         if (!toast.isActive(this.settingsToast)) {
             if (!toast.isActive(this.settingsToast)) {
                 this.settingsToast = toast(<StatusToast title="Application state reset."/>, {
@@ -144,6 +149,20 @@ class SettingsComponent extends Component {
         let newSettings = Object.assign({}, this.props.settings);
         newSettings[key] = value;
         this.props.updateSettings(newSettings);
+    }
+
+    componentDidMount() {
+        if (this.props.config.stateful) {
+            if (!this.props.stateful.value) {
+                toast(<StatusToast title="Unable to contact state server" message={this.props.stateful.error}/>, {
+                    type: toast.TYPE.ERROR
+                });
+            } else if (this.props.stateful.error) {
+                toast(<StatusToast title="State server error" message={this.props.stateful.error}/>, {
+                    type: toast.TYPE.ERROR
+                });
+            }
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -209,6 +228,10 @@ class SettingsComponent extends Component {
                 break;
         }
 
+        let shareOption = this.props.config.stateful ?
+            <MenuItem leftIcon={<SocialShare/>} primaryText="Share" onClick={this.props.share}/> :
+            null;
+
         return(
             <div className="settings">
                 <FloatingActionButton mini className="settings__open-btn" onClick={this._handleDrawerOpen}>
@@ -229,6 +252,7 @@ class SettingsComponent extends Component {
                                       className="settings__menu">
                                 <MenuItem leftIcon={<ContentSave/>} primaryText="Save" onClick={this._saveConfig}/>
                                 <MenuItem leftIcon={<ActionCached/>} primaryText="Reset" onClick={this._resetConfig}/>
+                                {shareOption}
                                 <Divider/>
                                 <MenuItem leftIcon={<ActionHelp/>} primaryText="Help" onClick={this._handleHelpOpen}/>
                             </IconMenu>
@@ -292,16 +316,44 @@ class SettingsComponent extends Component {
 }
 
 SettingsComponent.propTypes = {
+    defaultConfig: PropTypes.object,
     config: PropTypes.object,
     settings: PropTypes.object,
-    data: PropTypes.object
+    data: PropTypes.object,
+    share: PropTypes.func,
+    stateful: PropTypes.object
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
     return {
+        defaultConfig: state.defaultConfig,
         config: state.config,
         settings: state.settings,
-        data: state.data
+        data: state.data,
+        share: () => {
+            try {
+                state.config.viewport = ownProps.viewport;
+                let data = {
+                    app_name: 'ondeck',
+                    user_state: JSON.stringify(state)
+                };
+                StatefulApi.setState(`${state.config.stateful}/states`, data).then(result => {
+                    toast(<ShareToast href={`${window.location.origin}/?id=${result.id}`}/>, {
+                        autoClose: false,
+                        closeOnClick: false
+                    });
+                }).catch((err) => {
+                    toast(<StatusToast title="Unable to contact state server" message={err.message}/>, {
+                        type: toast.TYPE.ERROR
+                    });
+                });
+            } catch (err) {
+                toast(<StatusToast title="Unable to serialize state" message={err.message}/>, {
+                    type: toast.TYPE.ERROR
+                });
+            }
+        },
+        stateful: state.stateful
     };
 };
 
@@ -310,6 +362,5 @@ export default connect(mapStateToProps, {
     updateSettings,
     resetSettings,
     saveConfig,
-    resetConfig,
     fetchData
 })(SettingsComponent);
