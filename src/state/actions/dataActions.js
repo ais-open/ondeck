@@ -32,3 +32,10 @@ export function fetchData(url) {
         });
     };
 }
+
+export function updateData(data) {
+    return {
+        type: types.DATA__UPDATE_DATA,
+        data
+    };
+}

@@ -121,6 +121,9 @@ class MapComponent extends Component {
         if (!_.isEqual(prevProps.data, this.props.data) && !this.props.data.pending) {
             this._centerMap();
         }
+        if (!_.isEqual(prevProps.config.viewport, this.props.config.viewport)) {
+            this._onViewportChange(this.props.config.viewport);
+        }
     }
 
     componentWillReceiveProps(nextProps) {

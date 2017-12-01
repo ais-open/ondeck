@@ -59,7 +59,9 @@ class SettingsComponent extends Component {
         this._handleBaseMap = this._handleBaseMap.bind(this);
         this._handleOnChange = this._handleOnChange.bind(this);
 
-        this.props.fetchData(this.props.config.dataUrl);
+        if (_.keys(this.props.data).length === 0) {
+            this.props.fetchData(this.props.config.dataUrl);
+        }
     }
 
     settingsToast = null;
@@ -190,7 +192,6 @@ class SettingsComponent extends Component {
     }
 
     render() {
-        console.log(this.props.stateful);
         const sliderStyle = {
             marginTop: 0,
             marginBottom: 0
@@ -316,21 +317,22 @@ SettingsComponent.propTypes = {
     stateful: PropTypes.object
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
     return {
         config: state.config,
         settings: state.settings,
         data: state.data,
         share: () => {
             try {
+                state.config.viewport = ownProps.viewport;
                 let data = {
                     app_name: 'ondeck',
                     user_state: JSON.stringify(state)
                 };
                 StatefulApi.setState(`${state.config.stateful}/states`, data).then(result => {
                     toast(<ShareToast href={`${window.location.origin}/?id=${result.id}`}/>, {
-                        type: toast.TYPE.SUCCESS,
-                        autoClose: false
+                        autoClose: false,
+                        closeOnClick: false
                     });
                 }).catch((err) => {
                     toast(<StatusToast title="Unable to contact state server" message={err.message}/>, {
