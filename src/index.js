@@ -14,6 +14,7 @@ import GlobalStore from './globalStore';
 import configureStore from './state/store/configureStore';
 import StatefulApi from './api/StatefulApi';
 import { updateConfig, saveConfig } from './state/actions/configActions';
+import { setDefaultConfig } from './state/actions/defaultConfigActions';
 import { updateSettings } from './state/actions/settingsActions';
 import { updateStatefulStatus } from './state/actions/statefulActions';
 
@@ -58,10 +59,8 @@ xhttp.onreadystatechange = () => {
         }
 
         // store default config for later use
-        const c = JSON.stringify(defaultConfig);
-        localStorage.setItem('ondeck.default_configuration', c);
+        store.dispatch(setDefaultConfig(defaultConfig));
 
-        // attempt to reach stateful service before rendering
         let statefulStatus = {
             value: false,
             error: null
@@ -79,19 +78,24 @@ xhttp.onreadystatechange = () => {
             registerServiceWorker();
         };
 
-        StatefulApi.getVersion(`${defaultConfig.stateful}/version`).then(() => {
-            statefulStatus = {
-                value: true,
-                error: null
-            };
+        // attempt to reach stateful service before rendering
+        if (defaultConfig.stateful) {
+            StatefulApi.getVersion(`${defaultConfig.stateful}/version`).then(() => {
+                statefulStatus = {
+                    value: true,
+                    error: null
+                };
+                render();
+            }).catch(err => {
+                statefulStatus = {
+                    value: false,
+                    error: err.message
+                };
+                render();
+            });
+        } else {
             render();
-        }).catch(err => {
-            statefulStatus = {
-                value: false,
-                error: err.message
-            };
-            render();
-        });
+        }
     }
 };
 

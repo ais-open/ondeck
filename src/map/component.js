@@ -121,7 +121,11 @@ class MapComponent extends Component {
         if (!_.isEqual(prevProps.data, this.props.data) && !this.props.data.pending) {
             this._centerMap();
         }
-        if (!_.isEqual(prevProps.config.viewport, this.props.config.viewport)) {
+        // update viewport if it's changed, but only if it's not equal to the default viewport (to prevent weird width/height issues)
+        if (
+            !_.isEqual(prevProps.config.viewport, this.props.config.viewport) &&
+            !_.isEqual(this.props.config.viewport, this.props.defaultConfig.viewport)
+        ) {
             this._onViewportChange(this.props.config.viewport);
         }
     }
@@ -159,6 +163,7 @@ class MapComponent extends Component {
 }
 
 MapComponent.propTypes = {
+    defaultConfig: PropTypes.object,
     config: PropTypes.object,
     settings: PropTypes.object,
     data: PropTypes.object
@@ -166,6 +171,7 @@ MapComponent.propTypes = {
 
 const mapStateToProps = state => {
     return {
+        defaultConfig: state.defaultConfig,
         config: state.config,
         settings: state.settings,
         data: state.data

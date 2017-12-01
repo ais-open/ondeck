@@ -1,10 +1,12 @@
 {
-    "version": 4.5,
+    "version": 4.8,
     "dataUrl": "data/sample.geojson",
     "baseMap": "http://localhost:8080/styles/ne-homebase-dark/style.json",
     "stateful": "http://localhost:8081",
     "layer": "geojson",
     "viewport": {
+        "width": 500,
+        "height": 500,
         "longitude": -100,
         "latitude": 40.7,
         "zoom": 4,

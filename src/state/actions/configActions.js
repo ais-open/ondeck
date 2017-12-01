@@ -13,9 +13,3 @@ export function saveConfig(config) {
         config
     }
 }
-
-export function resetConfig() {
-    return {
-        type: types.CONFIG__RESET_CONFIG
-    }
-}

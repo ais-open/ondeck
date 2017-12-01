@@ -7,8 +7,9 @@ export function updateSettings(settings) {
     };
 }
 
-export function resetSettings() {
+export function resetSettings(defaultConfig) {
     return {
-        type: types.SETTINGS__RESET_SETTINGS
+        type: types.SETTINGS__RESET_SETTINGS,
+        defaultConfig
     };
 }

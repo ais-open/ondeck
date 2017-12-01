@@ -31,44 +31,46 @@ class App extends Component {
     }
 
     componentDidMount() {
-        let statefulStatus = {
-            value: false,
-            error: null
-        };
+        if (this.props.config.stateful) {
+            let statefulStatus = {
+                value: false,
+                error: null
+            };
 
-        const getStateId = () => {
-            let query = window.location.search.substring(1);
-            let vars = query.split('&');
-            for (let i = 0; i < vars.length; i++) {
-                let pair = vars[i].split('=');
-                if (decodeURIComponent(pair[0]) === 'id') {
-                    return decodeURIComponent(pair[1]);
+            const getStateId = () => {
+                let query = window.location.search.substring(1);
+                let vars = query.split('&');
+                for (let i = 0; i < vars.length; i++) {
+                    let pair = vars[i].split('=');
+                    if (decodeURIComponent(pair[0]) === 'id') {
+                        return decodeURIComponent(pair[1]);
+                    }
                 }
-            }
-        };
+            };
 
-        const stateId = getStateId();
+            const stateId = getStateId();
 
-        if (stateId) {
-            StatefulApi.getState(`${this.props.config.stateful}/states/state/${stateId}`).then(result => {
-                let initialState = {};
-                try {
-                    initialState = JSON.parse(result.user_state);
-                    this.props.updateConfig(initialState.config);
-                    this.props.updateSettings(initialState.settings);
-                    this.props.updateData(initialState.data);
-                } catch (err) {
+            if (stateId) {
+                StatefulApi.getState(`${this.props.config.stateful}/states/state/${stateId}`).then(result => {
+                    let initialState = {};
+                    try {
+                        initialState = JSON.parse(result.user_state);
+                        this.props.updateConfig(initialState.config);
+                        this.props.updateSettings(initialState.settings);
+                        this.props.updateData(initialState.data);
+                    } catch (err) {
+                        statefulStatus = {
+                            value: true,
+                            error: err.message
+                        };
+                    }
+                }).catch((err) => {
                     statefulStatus = {
-                        value: true,
+                        value: false,
                         error: err.message
                     };
-                }
-            }).catch((err) => {
-                statefulStatus = {
-                    value: false,
-                    error: err.message
-                };
-            });
+                });
+            }
         }
     }
 

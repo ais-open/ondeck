@@ -8,9 +8,6 @@ export default function configReducer(state = {}, action) {
             const c = JSON.stringify(action.config);
             localStorage.setItem('ondeck.configuration', c);
             return action.config;
-        case types.CONFIG__RESET_CONFIG:
-            let defaultConfig = localStorage.getItem('ondeck.default_configuration');
-            return Object.assign({}, state, JSON.parse(defaultConfig));
         default:
             return state;
     }
