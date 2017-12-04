@@ -126,6 +126,9 @@ class MapComponent extends Component {
             !_.isEqual(prevProps.config.viewport, this.props.config.viewport) &&
             !_.isEqual(this.props.config.viewport, this.props.defaultConfig.viewport)
         ) {
+            // remove width/height to fit to current window
+            _.unset(this.props.config.viewport, 'width');
+            _.unset(this.props.config.viewport, 'height');
             this._onViewportChange(this.props.config.viewport);
         }
     }
