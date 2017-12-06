@@ -97,11 +97,7 @@ xhttp.onreadystatechange = () => {
                 let initialState = {};
                 try {
                     initialState = JSON.parse(result.user_state);
-                    // this.props.updateConfig(initialState.config);
-                    // this.props.updateSettings(initialState.settings);
-                    // this.props.updateData(initialState.data);
-                    statefulStatus.id = stateId;
-                    store.dispatch(updateStatefulStatus(statefulStatus));
+                    initialState.stateful.id = stateId;
                     store = configureStore(initialState);
                     GlobalStore.setStore(store);
                     render();
@@ -113,7 +109,7 @@ xhttp.onreadystatechange = () => {
                     }));
                     render();
                 }
-            }).catch((err) => {
+            }).catch(err => {
                 store.dispatch(updateStatefulStatus({
                     value: false,
                     error: err.message,

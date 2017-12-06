@@ -115,20 +115,24 @@ class MapComponent extends Component {
     componentDidMount() {
         window.addEventListener('resize', this._resize.bind(this));
         this._resize();
+        if (this.props.config.layer === 'geojson') {
+            if (this.props.settings.fillProp) {
+                this.setState({
+                    featureProps: _.sortBy(_.uniq(_.map(this.props.data.features, `properties.${this.props.settings.fillProp}`)))
+                });
+            } else if (this.props.settings.lineProp) {
+                this.setState({
+                    featureProps: _.sortBy(_.uniq(_.map(this.props.data.features, `properties.${this.props.settings.lineProp}`)))
+                });
+            }
+        }
     }
 
     componentDidUpdate(prevProps) {
         if (!_.isEqual(prevProps.data, this.props.data) && !this.props.data.pending && !this.props.stateful.id) {
             this._centerMap();
         }
-        // update viewport if it's changed, but only if it's not equal to the default viewport (to prevent weird width/height issues)
-        if (
-            !_.isEqual(prevProps.config.viewport, this.props.config.viewport) &&
-            !_.isEqual(this.props.config.viewport, this.props.defaultConfig.viewport)
-        ) {
-            // remove width/height to fit to current window
-            _.unset(this.props.config.viewport, 'width');
-            _.unset(this.props.config.viewport, 'height');
+        if (!_.isEqual(prevProps.config.viewport, this.props.config.viewport)) {
             this._onViewportChange(this.props.config.viewport);
         }
     }
