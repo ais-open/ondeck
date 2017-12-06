@@ -47,9 +47,9 @@ class MapComponent extends Component {
     _centerMap() {
         if (this.props.data.features) {
             // collect bounds of map features
-            const features = _.sampleSize(this.props.data.features, 20);
+            // const features = _.sampleSize(this.props.data.features, 20);
             const boundsArr = [];
-            _.forEach(features, feature => {
+            _.forEach(this.props.data.features, feature => {
                 if (feature.geometry.type === 'Point') {
                     // use point lng/lat
                     boundsArr.push([feature.geometry.coordinates[0], feature.geometry.coordinates[1]]);
@@ -115,20 +115,24 @@ class MapComponent extends Component {
     componentDidMount() {
         window.addEventListener('resize', this._resize.bind(this));
         this._resize();
+        if (this.props.config.layer === 'geojson') {
+            if (this.props.settings.fillProp) {
+                this.setState({
+                    featureProps: _.sortBy(_.uniq(_.map(this.props.data.features, `properties.${this.props.settings.fillProp}`)))
+                });
+            } else if (this.props.settings.lineProp) {
+                this.setState({
+                    featureProps: _.sortBy(_.uniq(_.map(this.props.data.features, `properties.${this.props.settings.lineProp}`)))
+                });
+            }
+        }
     }
 
     componentDidUpdate(prevProps) {
-        if (!_.isEqual(prevProps.data, this.props.data) && !this.props.data.pending) {
+        if (!_.isEqual(prevProps.data, this.props.data) && !this.props.data.pending && !this.props.stateful.id) {
             this._centerMap();
         }
-        // update viewport if it's changed, but only if it's not equal to the default viewport (to prevent weird width/height issues)
-        if (
-            !_.isEqual(prevProps.config.viewport, this.props.config.viewport) &&
-            !_.isEqual(this.props.config.viewport, this.props.defaultConfig.viewport)
-        ) {
-            // remove width/height to fit to current window
-            _.unset(this.props.config.viewport, 'width');
-            _.unset(this.props.config.viewport, 'height');
+        if (!_.isEqual(prevProps.config.viewport, this.props.config.viewport)) {
             this._onViewportChange(this.props.config.viewport);
         }
     }
@@ -169,7 +173,8 @@ MapComponent.propTypes = {
     defaultConfig: PropTypes.object,
     config: PropTypes.object,
     settings: PropTypes.object,
-    data: PropTypes.object
+    data: PropTypes.object,
+    stateful: PropTypes.object
 };
 
 const mapStateToProps = state => {
@@ -177,7 +182,8 @@ const mapStateToProps = state => {
         defaultConfig: state.defaultConfig,
         config: state.config,
         settings: state.settings,
-        data: state.data
+        data: state.data,
+        stateful: state.stateful
     };
 };
 

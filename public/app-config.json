@@ -1,5 +1,5 @@
 {
-    "version": 4.8,
+    "version": 5.0,
     "dataUrl": "data/sample.geojson",
     "baseMap": "http://localhost:8080/styles/ne-homebase-dark/style.json",
     "stateful": "http://localhost:8081",

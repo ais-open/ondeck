@@ -11,6 +11,66 @@ class LayersComponent extends Component {
         this.state = {
             layer: null
         };
+
+        this._generateLayer = this._generateLayer.bind(this);
+    }
+
+    _generateLayer(layerId, props) {
+        if (props.config.layer === 'geojson') {
+            return new GeoJsonLayer({
+                id: layerId,
+                data: props.data,
+                opacity: props.settings.opacity,
+                stroked: props.settings.stroked,
+                filled: props.settings.filled,
+                extruded: props.settings.extruded,
+                wireframe: props.settings.wireframe,
+                fp64: props.settings.fp64,
+                pointRadiusMinPixels: props.settings.pointRadiusMinPixels,
+                pointRadiusScale: props.settings.pointRadiusScale,
+                lineWidthMinPixels: props.settings.lineWidthMinPixels,
+                getElevation: f => Math.sqrt(f.properties[props.settings.elevationProp]) * 10,
+                getFillColor: f => this.props.colorScale(f.properties[props.settings.fillProp]),
+                getLineColor: f => this.props.colorScale(f.properties[props.settings.lineProp]),
+                lightSettings: props.settings.lightSettings,
+                pickable: true,
+                onHover: props.onHover,
+                updateTriggers: {
+                    getElevation: props.settings.elevationProp,
+                    getFillColor: props.settings.fillProp,
+                    getLineColor: props.settings.lineProp
+                }
+            });
+        } else if (props.config.layer === 'hexagon') {
+            const pts = [];
+            _.forEach(props.data.features, feature => {
+                let coords = feature.geometry.coordinates;
+                pts.push({position: coords});
+            });
+            return new HexagonLayer({
+                id: `hexagon`,
+                data: pts,
+                colorRange: props.config.colorRanges[props.settings.colorRange].value,
+                opacity: props.settings.opacity,
+                extruded: props.settings.extruded,
+                fp64: props.settings.fp64,
+                radius: props.settings.radius,
+                coverage: props.settings.coverage,
+                lowerPercentile: props.settings.lowerPercentile,
+                upperPercentile: props.settings.upperPercentile,
+                elevationRange: [props.settings.lowerElevation, props.settings.upperElevation],
+                elevationScale: 2,
+                lightSettings: props.settings.lightSettings,
+                pickable: true,
+                onHover: props.onHover
+            });
+        }
+    }
+
+    componentDidMount() {
+        this.setState({
+            layer: this._generateLayer(this.props.config.layer, this.props)
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -19,70 +79,19 @@ class LayersComponent extends Component {
             !_.isEqual(this.props.settings, nextProps.settings)
         ) {
             if (nextProps.data) {
-                let layerObj = null;
                 // update layerId when changing elevation due to a deck.gl bug where the getElevation updateTrigger is ignored
                 // https://github.com/uber/deck.gl/issues/1065
-                let layerId = 'geojson';
+                let layerId = this.props.settings.layer;
                 if (this.props.settings.elevationProp !== nextProps.settings.elevationProp) {
                     layerId = nextProps.settings.elevationProp ?
-                        `geojson${nextProps.settings.elevationProp}` :
-                        'geojson';
+                        `${layerId}${nextProps.settings.elevationProp}` :
+                        layerId;
                 }
                 if (this.props.settings.colorRange !== nextProps.settings.colorRange) {
                     layerId = `${layerId}${nextProps.settings.colorRange}`;
                 }
-                if (nextProps.config.layer === 'geojson') {
-                    layerObj = new GeoJsonLayer({
-                        id: layerId,
-                        data: nextProps.data,
-                        opacity: nextProps.settings.opacity,
-                        stroked: nextProps.settings.stroked,
-                        filled: nextProps.settings.filled,
-                        extruded: nextProps.settings.extruded,
-                        wireframe: nextProps.settings.wireframe,
-                        fp64: nextProps.settings.fp64,
-                        pointRadiusMinPixels: nextProps.settings.pointRadiusMinPixels,
-                        pointRadiusScale: nextProps.settings.pointRadiusScale,
-                        lineWidthMinPixels: nextProps.settings.lineWidthMinPixels,
-                        getElevation: f => Math.sqrt(f.properties[nextProps.settings.elevationProp]) * 10,
-                        getFillColor: f => nextProps.colorScale(f.properties[nextProps.settings.fillProp]),
-                        getLineColor: f => nextProps.colorScale(f.properties[nextProps.settings.lineProp]),
-                        lightSettings: nextProps.settings.lightSettings,
-                        pickable: true,
-                        onHover: nextProps.onHover,
-                        updateTriggers: {
-                            getElevation: nextProps.settings.elevationProp,
-                            getFillColor: nextProps.settings.fillProp,
-                            getLineColor: nextProps.settings.lineProp
-                        }
-                    });
-                } else if (nextProps.config.layer === 'hexagon') {
-                    const pts = [];
-                    _.forEach(nextProps.data.features, feature => {
-                        let coords = feature.geometry.coordinates;
-                        pts.push({position: coords});
-                    });
-                    layerObj = new HexagonLayer({
-                        id: `hexagon`,
-                        data: pts,
-                        colorRange: nextProps.config.colorRanges[nextProps.settings.colorRange].value,
-                        opacity: nextProps.settings.opacity,
-                        extruded: nextProps.settings.extruded,
-                        fp64: nextProps.settings.fp64,
-                        radius: nextProps.settings.radius,
-                        coverage: nextProps.settings.coverage,
-                        lowerPercentile: nextProps.settings.lowerPercentile,
-                        upperPercentile: nextProps.settings.upperPercentile,
-                        elevationRange: [nextProps.settings.lowerElevation, nextProps.settings.upperElevation],
-                        elevationScale: 2,
-                        lightSettings: nextProps.settings.lightSettings,
-                        pickable: true,
-                        onHover: nextProps.onHover
-                    });
-                }
-
                 this.setState({
-                    layer: layerObj
+                    layer: this._generateLayer(layerId, nextProps)
                 });
             }
         }
