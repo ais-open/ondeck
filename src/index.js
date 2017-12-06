@@ -63,11 +63,12 @@ xhttp.onreadystatechange = () => {
 
         let statefulStatus = {
             value: false,
-            error: null
+            error: null,
+            id: null
         };
 
         const render = () => {
-            store.dispatch(updateStatefulStatus(statefulStatus));
+            // store.dispatch(updateStatefulStatus(statefulStatus));
             ReactDOM.render(
                 <Provider store={store}>
                     <MuiThemeProvider muiTheme={muiTheme}>
@@ -78,23 +79,69 @@ xhttp.onreadystatechange = () => {
             registerServiceWorker();
         };
 
-        // attempt to reach stateful service before rendering
-        if (defaultConfig.stateful) {
-            StatefulApi.getVersion(`${defaultConfig.stateful}/version`).then(() => {
-                statefulStatus = {
-                    value: true,
-                    error: null
-                };
-                render();
-            }).catch(err => {
-                statefulStatus = {
+        const getStateId = () => {
+            let query = window.location.search.substring(1);
+            let vars = query.split('&');
+            for (let i = 0; i < vars.length; i++) {
+                let pair = vars[i].split('=');
+                if (decodeURIComponent(pair[0]) === 'id') {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+        };
+
+        const stateId = getStateId();
+
+        if (stateId) {
+            StatefulApi.getState(`${defaultConfig.stateful}/states/state/${stateId}`).then(result => {
+                let initialState = {};
+                try {
+                    initialState = JSON.parse(result.user_state);
+                    // this.props.updateConfig(initialState.config);
+                    // this.props.updateSettings(initialState.settings);
+                    // this.props.updateData(initialState.data);
+                    statefulStatus.id = stateId;
+                    store.dispatch(updateStatefulStatus(statefulStatus));
+                    store = configureStore(initialState);
+                    GlobalStore.setStore(store);
+                    render();
+                } catch (err) {
+                    store.dispatch(updateStatefulStatus({
+                        value: true,
+                        error: err.message,
+                        id: stateId
+                    }));
+                    render();
+                }
+            }).catch((err) => {
+                store.dispatch(updateStatefulStatus({
                     value: false,
-                    error: err.message
-                };
+                    error: err.message,
+                    id: stateId
+                }));
                 render();
             });
         } else {
-            render();
+            // attempt to reach stateful service before rendering
+            if (defaultConfig.stateful) {
+                StatefulApi.getVersion(`${defaultConfig.stateful}/version`).then(() => {
+                    store.dispatch(updateStatefulStatus({
+                        value: true,
+                        error: null,
+                        id: null
+                    }));
+                    render();
+                }).catch(err => {
+                    store.dispatch(updateStatefulStatus({
+                        value: false,
+                        error: err.message,
+                        id: null
+                    }));
+                    render();
+                });
+            } else {
+                render();
+            }
         }
     }
 };

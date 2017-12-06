@@ -47,9 +47,9 @@ class MapComponent extends Component {
     _centerMap() {
         if (this.props.data.features) {
             // collect bounds of map features
-            const features = _.sampleSize(this.props.data.features, 20);
+            // const features = _.sampleSize(this.props.data.features, 20);
             const boundsArr = [];
-            _.forEach(features, feature => {
+            _.forEach(this.props.data.features, feature => {
                 if (feature.geometry.type === 'Point') {
                     // use point lng/lat
                     boundsArr.push([feature.geometry.coordinates[0], feature.geometry.coordinates[1]]);
@@ -118,7 +118,7 @@ class MapComponent extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!_.isEqual(prevProps.data, this.props.data) && !this.props.data.pending) {
+        if (!_.isEqual(prevProps.data, this.props.data) && !this.props.data.pending && !this.props.stateful.id) {
             this._centerMap();
         }
         // update viewport if it's changed, but only if it's not equal to the default viewport (to prevent weird width/height issues)
@@ -169,7 +169,8 @@ MapComponent.propTypes = {
     defaultConfig: PropTypes.object,
     config: PropTypes.object,
     settings: PropTypes.object,
-    data: PropTypes.object
+    data: PropTypes.object,
+    stateful: PropTypes.object
 };
 
 const mapStateToProps = state => {
@@ -177,7 +178,8 @@ const mapStateToProps = state => {
         defaultConfig: state.defaultConfig,
         config: state.config,
         settings: state.settings,
-        data: state.data
+        data: state.data,
+        stateful: state.stateful
     };
 };
 
