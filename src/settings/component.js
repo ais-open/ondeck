@@ -121,7 +121,6 @@ class SettingsComponent extends Component {
         if (this.state.dataUrl !== this.props.config.dataUrl) {
             newConfig.dataUrl = _.clone(this.state.dataUrl); // clone to prevent mutating state
             newSettings.tooltipProps = [];
-            this.props.fetchData(newConfig.dataUrl);
             this.props.updateConfig(newConfig);
             this.props.updateSettings(newSettings);
         }
