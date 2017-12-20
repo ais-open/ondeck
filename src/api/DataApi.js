@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import * as _ from 'lodash';
 
 class DataApi {
     checkStatus(response) {
@@ -12,8 +13,12 @@ class DataApi {
     }
 
     static fetchData(url) {
+        let options = {};
+        if (!_.startsWith(url, 'http')) {
+            options.protocol = window.location.protocol;
+        }
         return new Promise((resolve, reject) => {
-            fetch(url).then(this.checkStatus).then(response => {
+            fetch(url, options).then(this.checkStatus).then(response => {
                 return response.json();
             }).then(data => {
                 resolve(data);

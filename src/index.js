@@ -61,12 +61,6 @@ xhttp.onreadystatechange = () => {
         // store default config for later use
         store.dispatch(setDefaultConfig(defaultConfig));
 
-        let statefulStatus = {
-            value: false,
-            error: null,
-            id: null
-        };
-
         const render = () => {
             // store.dispatch(updateStatefulStatus(statefulStatus));
             ReactDOM.render(
