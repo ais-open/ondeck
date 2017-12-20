@@ -13,6 +13,9 @@ class DataApi {
     }
 
     static fetchData(url) {
+        const parser = window.document.createElement('a');
+        parser.href = url;
+        url = parser.protocol === ':' ? `//${url}` : url;
         return new Promise((resolve, reject) => {
             fetch(url).then(this.checkStatus).then(response => {
                 return response.json();
