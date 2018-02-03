@@ -1,5 +1,4 @@
 import 'whatwg-fetch';
-import * as _ from 'lodash';
 
 class DataApi {
     checkStatus(response) {
